@@ -76,8 +76,13 @@ function initSentMessage() {
         for (let index = 0; index < 4; index++) {
             let messageContainer = document.createElement("div");
             let senderElement = document.createElement("div");
-            let contentElement= document.createElement("div") ;
+            let contentElement= document.createElement("div");
             let fromElement = document.createTextNode("To : ");
+            let dateElement = document.createElement("span");
+            let day = getRandomNumber(1,30);
+            let month = getRandomNumber(1,12);
+            let year = 2019;
+            dateElement.innerHTML = "date : " +day+"/"+month+"/"+year;
             senderElement.classList += "sender";
             contentElement.classList += "message";
             messageContainer.classList += "messageContainer";
@@ -86,6 +91,7 @@ function initSentMessage() {
             let c = "a type specimen book.  It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum ...";
             senderElement.appendChild(fromElement);
             senderElement.appendChild( document.createTextNode(s));
+            senderElement.appendChild(dateElement);
             contentElement.appendChild(document.createTextNode(c));
             messageContainer.appendChild(senderElement);
             messageContainer.appendChild(contentElement);
@@ -94,5 +100,9 @@ function initSentMessage() {
         sentInitiated = true;
     }
     
+}
+
+function getRandomNumber(min,max) {
+    return Math.floor(Math.random() * (max - min) + min);
 }
 //

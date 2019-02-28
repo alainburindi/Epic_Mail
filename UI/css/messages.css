@@ -143,8 +143,9 @@ main .message {
     line-height: 25px;
 }
 
-main .sender p {
-    /* float: left; */
+main .sender span {
+    float: left;
+    margin-right: 100px;
 }
 
 /* footer */
