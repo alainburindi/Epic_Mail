@@ -1,6 +1,7 @@
 let inbox = document.getElementById("inbox_content");
 let sent = document.getElementById("sent_content");
 let draft = document.getElementById("draft_content");
+let inboxInitiated = false;
 inbox.style.display = "none";
 sent.style.display = "none";
 draft.style.display = "none";
@@ -37,9 +38,24 @@ let draftBtn = document.getElementById("draft");draftBtn.addEventListener('click
 })
 
 function initMessage() {
-    for (let index = 0; index < 2; index++) {
-        let s = "sender@email.com";
-        let c = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum";
-        inbox.innerHTML = c;   
+    if (!inboxInitiated){
+        for (let index = 0; index < 2; index++) {
+            let senderElement = document.createElement("div");
+            let contentElement= document.createElement("div") ;
+            let fromElement = document.createElement("p");
+            fromElement.appendChild(document.createTextNode("from : "));
+            senderElement.classList += "sender";
+            contentElement.classList += "message";
+
+            let s = "sender@email.com";
+            let c = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum";
+            senderElement.appendChild(fromElement);
+            senderElement.appendChild( document.createTextNode(s));
+            contentElement.appendChild(document.createTextNode(c));
+            inbox.appendChild(senderElement);
+            inbox.appendChild(contentElement);  
+        }
+        inboxInitiated = true;
     }
+    
 }
