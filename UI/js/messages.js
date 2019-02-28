@@ -73,12 +73,14 @@ function initMessage() {
 
 function initSentMessage() {
     if (!sentInitiated){
-        for (let index = 0; index < 4; index++) {
+        for (let index = 0; index < 3; index++) {
             let messageContainer = document.createElement("div");
             let senderElement = document.createElement("div");
             let contentElement= document.createElement("div");
             let fromElement = document.createTextNode("To : ");
             let dateElement = document.createElement("span");
+            let retract = document.createElement("button");
+            retract.innerHTML = "Rectract";
             let day = getRandomNumber(1,30);
             let month = getRandomNumber(1,12);
             let year = 2019;
@@ -95,7 +97,11 @@ function initSentMessage() {
             contentElement.appendChild(document.createTextNode(c));
             messageContainer.appendChild(senderElement);
             messageContainer.appendChild(contentElement);
+            messageContainer.appendChild(retract);
             sent.appendChild(messageContainer);  
+            retract.addEventListener('click', ()=>{
+                sent.removeChild(retract.parentElement)
+            })
         }
         sentInitiated = true;
     }

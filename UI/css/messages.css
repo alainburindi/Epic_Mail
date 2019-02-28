@@ -143,6 +143,15 @@ main .message {
     line-height: 25px;
 }
 
+main button {
+    border-radius: 5px;
+    font-size: 17px;
+    background: red;
+    border: none;
+    color: whitesmoke;
+    padding: 10px;
+}
+
 main .sender span {
     float: left;
     margin-right: 100px;
