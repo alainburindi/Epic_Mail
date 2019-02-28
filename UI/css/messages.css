@@ -64,14 +64,16 @@ main h3 {
 }
 
 main {
+    position: absolute;
 }
 
 main .left-bar {
+    padding-top: 50px;
     margin-top: 20px;
     float: left;
     width: 18%;
     height: 400px;
-    background-color: aqua;
+    background-color: whitesmoke;
     border-radius: 10px;
 }
 main nav{
@@ -103,15 +105,49 @@ main nav ul li[class="active"] {
     padding: 10px;
 }
 main .content {
+    padding: 10px;
     height: 400px;
     float: right;
-    border: 1px solid black;
     width: 80%;
+    /* overflow: visible; */
+
 }
 
-.sender {
-    color: blue;
-    width: 100%;
+main .messageContainer {
+    padding: 10px;
+    border-top: 1px solid rgb(9, 86, 109);
+    border-bottom: 1px solid rgb(9, 86, 109);
+    border-radius: 10px;
+    margin: 0 20px 10px;
+}
+main .sender {
+    line-height: 30px;
+    font-weight: bolder;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: rgb(9, 86, 109);
+}
+
+main .sender p{
+    width: 100px;
+    text-align: center;
+    margin-left: 400px;
+    margin-top: -35px;
+    padding: 0 10px;
+    color: red;
+    background: rgb(173, 122, 122);
+    font-weight: bolder;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: rgb(9, 86, 109);
+}
+
+main .message {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+}
+
+main .sender p {
+    /* float: left; */
 }
 
 /* footer */
