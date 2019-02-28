@@ -2,6 +2,7 @@ let inbox = document.getElementById("inbox_content");
 let sent = document.getElementById("sent_content");
 let draft = document.getElementById("draft_content");
 let inboxInitiated = false;
+let sentInitiated = false;
 inbox.style.display = "none";
 sent.style.display = "none";
 draft.style.display = "none";
@@ -24,6 +25,7 @@ let sentBtn = document.getElementById("sent");sentBtn.addEventListener('click', 
         sent.style.display = "block";
         inbox.style.display = "none";
         draft.style.display = "none";
+        initSentMessage();
     }
 })
 let draftBtn = document.getElementById("draft");draftBtn.addEventListener('click', function() {
@@ -39,7 +41,7 @@ let draftBtn = document.getElementById("draft");draftBtn.addEventListener('click
 
 function initMessage() {
     if (!inboxInitiated){
-        for (let index = 0; index < 4; index++) {
+        for (let index = 0; index < 3; index++) {
             let messageContainer = document.createElement("div");
             let senderElement = document.createElement("div");
             let contentElement= document.createElement("div") ;
@@ -67,4 +69,30 @@ function initMessage() {
     }
     
 }
-//a type specimen book.  It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
+
+
+function initSentMessage() {
+    if (!sentInitiated){
+        for (let index = 0; index < 4; index++) {
+            let messageContainer = document.createElement("div");
+            let senderElement = document.createElement("div");
+            let contentElement= document.createElement("div") ;
+            let fromElement = document.createTextNode("To : ");
+            senderElement.classList += "sender";
+            contentElement.classList += "message";
+            messageContainer.classList += "messageContainer";
+
+            let s = "receiver"+index+"@email.com";
+            let c = "a type specimen book.  It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum ...";
+            senderElement.appendChild(fromElement);
+            senderElement.appendChild( document.createTextNode(s));
+            contentElement.appendChild(document.createTextNode(c));
+            messageContainer.appendChild(senderElement);
+            messageContainer.appendChild(contentElement);
+            sent.appendChild(messageContainer);  
+        }
+        sentInitiated = true;
+    }
+    
+}
+//

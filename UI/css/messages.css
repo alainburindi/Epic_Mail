@@ -64,7 +64,6 @@ main h3 {
 }
 
 main {
-    position: absolute;
 }
 
 main .left-bar {
@@ -109,8 +108,6 @@ main .content {
     height: 400px;
     float: right;
     width: 80%;
-    /* overflow: visible; */
-
 }
 
 main .messageContainer {
@@ -161,7 +158,7 @@ footer {
     padding: 0 40px;
     overflow: hidden;
     text-align: center;
-    float:bottom;
+    /* float:bottom; */
 }
 
 footer p {
