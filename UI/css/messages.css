@@ -63,16 +63,9 @@ main h3 {
     
 }
 
-/* main .icon {
-    float: right;
-    width: 500px;
-    height: 300px;
-    background-image: url('/register-icon.png');
-    background-repeat: no-repeat;
-} */
-
 main {
 }
+
 main .left-bar {
     margin-top: 20px;
     float: left;
@@ -116,7 +109,10 @@ main .content {
     width: 80%;
 }
 
-
+.sender {
+    color: blue;
+    width: 100%;
+}
 
 /* footer */
 
