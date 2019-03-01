@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../css/admin.css">
+    <title> Admin | Epic Mail</title>
+</head>
+<body>
+    <!-- header -->
+    <header>
+        <nav class="">
+            <a href="" class="header-brand">Epic Mail</a>
+            <ul class="login-register-list">
+                <li><a href="login.html">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <!-- main contents -->
+    <main>
+        <nav class="left-bar">
+            <div class="admin">
+                <img src="../assets/admin.png" alt="admin picture" srcset="">
+                <p>Admin@epicmail.com</p>
+            </div>
+            <ul>
+                <li id="user"><a href="#"> Users</a></li>
+                <li id="group"><a href="#"> Groups</a></li>
+            </ul>
+        </nav>
+        <div class="content">
+            <div id="user_content">
+                <table style="width:100%" id="userTable">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th> 
+                    </tr>                    
+                    <tr>
+                        <td>Jill Smith </td>
+                        <td>Jillsmith@epicmail.com</td> 
+                    </tr>
+                    <tr>
+                        <td>Eve Jackson</td>
+                        <td>Evejackson@epicmail.com</td> 
+                    </tr>
+                </table>
+                
+                <!-- <div>
+                    <h3>Add a new group</h3>
+                </div> -->
+
+                <form action="">
+                    <label for="">Name :</label>
+                    <input type="text" id="nameInput">
+                    <label for="">Email :</label>
+                    <input type="email" id="emailInput">
+                    <button class="save" id="saveUser">Add</button>
+                </form>
+                <p id="erorr">make sure to put all values</p>
+            </div>
+            <div id="group_content">
+                <table style="width:100%" id="userTable">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th> 
+                    </tr>                    
+                    <tr>
+                        <td>Jill Smith </td>
+                        <td>Jillsmith@epicmail.com</td> 
+                    </tr>
+                    <tr>
+                        <td>Eve Jackson</td>
+                        <td>Evejackson@epicmail.com</td> 
+                    </tr>
+                </table>
+                    <form action="">
+
+                        <label for="">Name :</label>
+                        <input type="text" id="nameInput">
+                        <label for="">Users emails :</label>
+                        <input type="text" id="emailInput">
+                        <button class="save" id="saveUser">Add</button>
+                    </form>
+                    <p id="erorr">make sure to put all values</p>
+            </div>
+            <div id="new_content">
+                <form action="">
+                    <label for="">Email to :</label>
+                    <input type="email">
+                    <label for="">To group :</label>
+                    <select name="" id="">
+                        <option value="" disabled selected>Choose a group</option>
+                        <option value="">group 1</option>
+                        <option value="">group 2</option>
+                    </select>
+                    <div id="message_input">
+                        <label for="">Message : </label>
+                        <textarea>
+                                 
+                        </textarea>
+                        <button type="submit" name="" id="submit" value="">Send</button>
+                        <button class="save">Save to draft</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+    <!-- footer -->
+    <footer>
+        <p>&copy; 2019 | Epic Mail</p>
+    </footer>
+
+    <script src="../js/admin.js"></script>
+</body>
+</html>
