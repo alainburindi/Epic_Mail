@@ -21,7 +21,8 @@
     <main>
         <nav class="left-bar">
             <ul>
-                <li id="inbox"><a href="#"> Inbox</a></li>
+                <li id="new"><a href="#"> New message</a></li>
+                <li id="inbox"><a href="#"> Inbox Messages</a></li>
                 <li id="sent"><a href="#">Sent messages</a></li>
                 <li id="draft"><a href="#">Draft</a></li>
             </ul>
@@ -33,6 +34,24 @@
             </div>
             <div id="draft_content">
                     drafft
+            </div>
+            <div id="new_content">
+                <form action="">
+                    <label for="">Email to :</label>
+                    <input type="email">
+                    <label for="">To group :</label>
+                    <select name="" id="">
+                        <option value="">group 1</option>
+                        <option value="">group 2</option>
+
+                    </select>
+                    <label for="">Message : </label>
+                    <textarea>
+                         
+                    </textarea>
+                    <button type="submit" name="" id="submit" value="">Send</button>
+                    <button class="save">Save to draft</button>
+                </form>
             </div>
         </div>
     </main>

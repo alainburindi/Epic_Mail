@@ -1,19 +1,24 @@
 let inbox = document.getElementById("inbox_content");
 let sent = document.getElementById("sent_content");
 let draft = document.getElementById("draft_content");
+let newContent = document.getElementById("new_content");
 let inboxInitiated = false;
 let sentInitiated = false;
 inbox.style.display = "none";
 sent.style.display = "none";
 draft.style.display = "none";
+newContent.style.display = "none";
+
 let inboxBtn = document.getElementById("inbox");inboxBtn.addEventListener('click', function() {
     if (inbox.style.display === "none") {
         inboxBtn.className = "active";
         sentBtn.className -= "active";
         draftBtn.className -= "active";
+        newBtn.className -= "active";
         draft.style.display = "none";
         inbox.style.display = "block";
         sent.style.display = "none";
+        newContent.style.display = "none";
         initMessage();
     }
 })
@@ -23,8 +28,10 @@ let sentBtn = document.getElementById("sent");sentBtn.addEventListener('click', 
         inboxBtn.className -= "active";
         draftBtn.className -= "active";
         sent.style.display = "block";
+        newBtn.className -= "active";
         inbox.style.display = "none";
         draft.style.display = "none";
+        newContent.style.display = "none";
         initSentMessage();
     }
 })
@@ -32,8 +39,24 @@ let draftBtn = document.getElementById("draft");draftBtn.addEventListener('click
     if (draft.style.display === "none") {
         draft.style.display = "block";
         draftBtn.className = "active";
+        newBtn.className -= "active";
         sentBtn.className -= "active";
         inboxBtn.className -= "active";
+        inbox.style.display = "none";
+        sent.style.display = "none";
+        newContent.style.display = "none";
+    }
+})
+
+let newBtn = document.getElementById("new");
+newBtn.addEventListener('click', function() {
+    if (newContent.style.display === "none") {
+        newContent.style.display = "block";
+        newBtn.className = "active";
+        sentBtn.className -= "active";
+        inboxBtn.className -= "active";
+        draftBtn.className -= "active";
+        draft.style.display = "none";
         inbox.style.display = "none";
         sent.style.display = "none";
     }

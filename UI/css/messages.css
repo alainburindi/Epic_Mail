@@ -157,6 +157,60 @@ main .sender span {
     margin-right: 100px;
 }
 
+main form {
+    padding: 30px;
+    margin: 0 auto;
+    border: 2px solid rgb(190, 187, 187);
+    border-radius: 20px;
+}
+
+main form label {
+    line-height: 40px;
+    font-size: 20px;
+}
+
+main form input {
+    margin-bottom: 20px;
+    font-size: 15px;
+    height: 30px;
+    width: 30%;
+    padding: 7px 0;
+    margin-right: 20px;
+}
+
+main form select {
+    margin-bottom: 20px;
+    font-size: 15px;
+    width: 30%;
+    padding: 7px 0;
+    margin-right: 200px;
+}
+
+main form textarea {
+    font-size: 20px;
+    height: 100px;
+    width: 100%;
+    overflow: visible;
+}
+
+main form button[type = "submit"] {
+    border: none;
+    color: whitesmoke;
+    border-radius: 7px;
+    margin-top: 10px;
+    width: 20%;
+    background-color: rgb(18, 40, 235);
+    font-size: 20px;
+    font-style: italic;
+}
+
+main form .save{
+    margin-top: 10px;
+    width: 20%;
+    background-color: green;
+float: right;
+}
+
 /* footer */
 
 footer {
