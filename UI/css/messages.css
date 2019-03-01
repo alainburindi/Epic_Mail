@@ -105,7 +105,6 @@ main nav ul li[class="active"] {
 }
 main .content {
     padding: 10px;
-    height: 400px;
     float: right;
     width: 80%;
 }

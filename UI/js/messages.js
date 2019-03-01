@@ -5,6 +5,7 @@ let newContent = document.getElementById("new_content");
 let inboxInitiated = false;
 let sentInitiated = false;
 let draftInitiated = false;
+let added = false;
 inbox.style.display = "none";
 sent.style.display = "none";
 draft.style.display = "none";
@@ -66,11 +67,11 @@ newBtn.addEventListener('click', function() {
 
 function initMessage() {
     if (!inboxInitiated){
+        alert("")
         while (inbox.hasChildNodes()) {
             inbox.removeChild(inbox.lastChild);
         }
         for (let index = 0; index < 3; index++) {
-            
             let messageContainer = document.createElement("div");
             let senderElement = document.createElement("div");
             let contentElement= document.createElement("div") ;
@@ -91,16 +92,31 @@ function initMessage() {
             contentElement.appendChild(document.createTextNode(c));
             messageContainer.appendChild(senderElement);
             messageContainer.appendChild(contentElement);
-            
+            let respond = document.createElement('button');
+            respond.innerHTML = "Respond";
+            messageContainer.appendChild(respond);
+            respond.style.display = "none";
+            respond.addEventListener("click",()=>{
+                if (!added) {
+                    let edit = document.getElementById("message_input");
+                let form = document.createElement("form");
+                    form.appendChild(edit);
+                    messageContainer.appendChild(form);
+                    messageContainer.removeChild(respond);
+                    added = true;
+                }
+                
+            })
             inbox.appendChild(messageContainer);
             messageContainer.addEventListener('click', () => {
                 while (inbox.hasChildNodes()) {
                     inbox.removeChild(inbox.lastChild);
                 }
                 contentElement.innerHTML = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.  It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum ";
+                respond.style.display = "block";
+                
                 inbox.appendChild(messageContainer);
                 inboxInitiated = false;
-                // initReadPane(messageContainer);
             });  
         }
         inboxInitiated = true;
