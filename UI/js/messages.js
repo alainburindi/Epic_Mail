@@ -4,6 +4,7 @@ let draft = document.getElementById("draft_content");
 let newContent = document.getElementById("new_content");
 let inboxInitiated = false;
 let sentInitiated = false;
+let draftInitiated = false;
 inbox.style.display = "none";
 sent.style.display = "none";
 draft.style.display = "none";
@@ -45,6 +46,7 @@ let draftBtn = document.getElementById("draft");draftBtn.addEventListener('click
         inbox.style.display = "none";
         sent.style.display = "none";
         newContent.style.display = "none";
+        initDraftMessage();
     }
 })
 
@@ -129,6 +131,43 @@ function initSentMessage() {
         sentInitiated = true;
     }
     
+}
+
+
+function initDraftMessage() {
+    if (!draftInitiated){
+        for (let index = 0; index < 3; index++) {
+            let messageContainer = document.createElement("div");
+            let senderElement = document.createElement("div");
+            let contentElement= document.createElement("div");
+            let fromElement = document.createTextNode("To : ");
+            let dateElement = document.createElement("span");
+            let retract = document.createElement("button");
+            retract.innerHTML = "Delete";
+            let day = getRandomNumber(1,30);
+            let month = getRandomNumber(1,12);
+            let year = 2019;
+            dateElement.innerHTML = "date : " +day+"/"+month+"/"+year;
+            senderElement.classList += "sender";
+            contentElement.classList += "message";
+            messageContainer.classList += "messageContainer";
+
+            let s = "receiver"+index+"@email.com";
+            let c = "a type specimen book.  It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum ...";
+            senderElement.appendChild(fromElement);
+            senderElement.appendChild( document.createTextNode(s));
+            senderElement.appendChild(dateElement);
+            contentElement.appendChild(document.createTextNode(c));
+            messageContainer.appendChild(senderElement);
+            messageContainer.appendChild(contentElement);
+            messageContainer.appendChild(retract);
+            draft.appendChild(messageContainer);  
+            retract.addEventListener('click', ()=>{
+                draft.removeChild(retract.parentElement)
+            })
+        }
+        draftInitiated = true;
+    }   
 }
 
 function getRandomNumber(min,max) {
