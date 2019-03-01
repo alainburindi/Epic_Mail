@@ -66,7 +66,11 @@ newBtn.addEventListener('click', function() {
 
 function initMessage() {
     if (!inboxInitiated){
+        while (inbox.hasChildNodes()) {
+            inbox.removeChild(inbox.lastChild);
+        }
         for (let index = 0; index < 3; index++) {
+            
             let messageContainer = document.createElement("div");
             let senderElement = document.createElement("div");
             let contentElement= document.createElement("div") ;
@@ -74,7 +78,6 @@ function initMessage() {
             senderElement.classList += "sender";
             contentElement.classList += "message";
             messageContainer.classList += "messageContainer";
-
             let s = "sender"+index+"@email.com";
             let c = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make ...";
             senderElement.appendChild(fromElement);
@@ -88,13 +91,26 @@ function initMessage() {
             contentElement.appendChild(document.createTextNode(c));
             messageContainer.appendChild(senderElement);
             messageContainer.appendChild(contentElement);
-            inbox.appendChild(messageContainer);  
+            
+            inbox.appendChild(messageContainer);
+            messageContainer.addEventListener('click', () => {
+                while (inbox.hasChildNodes()) {
+                    inbox.removeChild(inbox.lastChild);
+                }
+                contentElement.innerHTML = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.  It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum ";
+                inbox.appendChild(messageContainer);
+                inboxInitiated = false;
+                // initReadPane(messageContainer);
+            });  
         }
         inboxInitiated = true;
     }
     
 }
 
+function initReadPane(){
+
+}
 
 function initSentMessage() {
     if (!sentInitiated){
@@ -115,7 +131,7 @@ function initSentMessage() {
             messageContainer.classList += "messageContainer";
 
             let s = "receiver"+index+"@email.com";
-            let c = "a type specimen book.  It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum ...";
+            let c = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.  It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum ...";
             senderElement.appendChild(fromElement);
             senderElement.appendChild( document.createTextNode(s));
             senderElement.appendChild(dateElement);
