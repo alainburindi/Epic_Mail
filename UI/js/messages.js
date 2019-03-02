@@ -11,7 +11,8 @@ sent.style.display = "none";
 draft.style.display = "none";
 newContent.style.display = "none";
 
-let inboxBtn = document.getElementById("inbox");inboxBtn.addEventListener('click', function() {
+let inboxBtn = document.getElementById("inbox");
+inboxBtn.addEventListener('click', function() {
     if (inbox.style.display === "none") {
         inboxBtn.className = "active";
         sentBtn.className -= "active";
@@ -24,6 +25,7 @@ let inboxBtn = document.getElementById("inbox");inboxBtn.addEventListener('click
         initMessage();
     }
 })
+inboxBtn.click();
 let sentBtn = document.getElementById("sent");sentBtn.addEventListener('click', function() {
     if (sent.style.display === "none") {
         sentBtn.className = "active";
@@ -67,7 +69,6 @@ newBtn.addEventListener('click', function() {
 
 function initMessage() {
     if (!inboxInitiated){
-        alert("")
         while (inbox.hasChildNodes()) {
             inbox.removeChild(inbox.lastChild);
         }
