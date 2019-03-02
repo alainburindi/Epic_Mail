@@ -100,9 +100,7 @@ th {
 
 table {
     border-spacing: 5px;
-}
-main nav{
-
+    margin-bottom: 20px;
 }
 main nav ul {
     float: left;
@@ -252,7 +250,10 @@ main form .save{
 main #group_content form #nameInput{
     width: 180px;
 }
-
+#label{
+    margin: 50px;
+    font-size: 30px;
+}
 /* footer */
 
 footer {
@@ -268,4 +269,87 @@ footer {
 footer p {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 20px;
+}
+
+@media only screen and (max-width: 1000px) {
+    main .content {
+        width: 100%;
+        margin-bottom: 80px;
+    }
+    header nav ul{
+        margin-top: -80px;
+        margin-right: 50px;
+    }
+
+    main .left-bar {
+        width: 100%;
+        height: fit-content;
+    }
+    main nav ul {
+        margin-left: 60px;
+    }
+    main nav ul li {
+        display: inline-block;
+    }
+    main table {
+        margin-left: 10px;
+    }
+    main nav ul li[class="active"] {
+        margin-left: 20px;
+        border-left: none;
+        border-top: 5px solid black;
+    }
+
+    main form .save,main form button[type = "submit"]{
+        width: 40%;
+    }
+
+    main .sender span {
+        float: left;
+        margin-right: 100px;
+    }
+    
+    main form {
+        margin-left: 30px;
+    }
+    
+    main form label {
+        line-height: 40px;
+        font-size: 20px;
+    }
+    
+    main form input {
+        width: 100%;
+    }
+    
+    main form select {
+        width: 100%;
+    }
+
+    main .left-bar img{
+        float: right;
+        width: 90px;
+        margin-left: 60px;
+    }
+    main .left-bar .admin{
+        margin-top: -24px;
+        height:  100px;
+    }
+
+    main .left-bar .admin p{
+        font-family: 'Courier New', Courier, monospace;
+        color: rgb(5, 155, 130);
+        font-size: 23px;
+    }
+
+    main #group_content form{
+        border: none;
+    }
+
+    main form input {
+        width: 100%;
+        padding: 7px 0;
+        margin-right: 20px;
+    }
+
 }
