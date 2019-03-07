@@ -1,0 +1,25 @@
+{
+  "name": "sever",
+  "version": "1.0.0",
+  "description": "epic-mail server",
+  "main": "app.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "nodemon --exec babel-node config/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.3.4",
+    "nodemon": "^1.18.10"
+  },
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
