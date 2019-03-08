@@ -33,7 +33,7 @@ userRoutes.post('/signup', (req, res, next) => {
             if(result){
                 return res.status(409).json({
                     status : 409,
-                    message : 'user with the same email already exists'
+                    error : 'user with the same email already exists'
                 })
             }else{
                 bcrypt.hash(req.body.password, 10, (err, hash) => {
@@ -57,7 +57,7 @@ userRoutes.post('/signup', (req, res, next) => {
                             )
                             res.status(201).json({
                                 status : 201,
-                                data : token
+                                data : [{token : token}]
                             })
                         }).catch(err => {
                             console.log(err)
@@ -72,7 +72,7 @@ userRoutes.post('/signup', (req, res, next) => {
     }else{
         return res.status(409).json({
             status : 409,
-            message : 'invalid email address'
+            error : 'invalid email address'
         })
     }
 })
@@ -85,7 +85,7 @@ userRoutes.post('/login', (req, res, next) => {
                 if (err) {
                     return res.status(401).json({
                         status : 401,
-                        message : 'Authentication failed, please check your credentials'
+                        error : 'Authentication failed, please check your credentials'
                     })
                 }
                 if (result){
@@ -101,21 +101,20 @@ userRoutes.post('/login', (req, res, next) => {
                     )
                     res.status(200).json({
                         status : 200,
-                        token : token
+                        data : [{token : token}]
                     })
                 }else{
                     return res.status(401).json({
                         status : 401,
-                        message : 'Authentication failed, please check your credentials'
+                        error : 'Authentication failed, please check your credentials'
                     })
                 }
             })
-
             
         }else{
             return res.status(401).json({
                 status : 401,
-                message : 'Authentication failed, please check your credentials'
+                error : 'Authentication failed, please check your credentials'
             })
         }
     }).catch(err => {
