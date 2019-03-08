@@ -4,12 +4,13 @@ import bodyParser from 'body-parser';
 const app = express()
 
 import userRoutes from './routes/user'
+import messageRoutes from './routes/messages';
 
 app.use(bodyParser.urlencoded({extended : true}))
 app.use(bodyParser.json())
 
 app.use('/auth', userRoutes)
-
+app.use('/messages', messageRoutes)
 
 app.use((req, res, next) => {
     const error = new Error('not found')
