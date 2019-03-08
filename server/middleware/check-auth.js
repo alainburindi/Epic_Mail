@@ -9,7 +9,7 @@ export default (req, res, next) => {
     } catch (error) {
         return res.status(401).json({
             status : 401,
-            message : 'Authentication failed, please check your credentials'
+            error : 'Authentication failed, please check your credentials'
         })
     }
 }
