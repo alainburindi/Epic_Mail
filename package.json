@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec babel-node app.js",
-    "test": "mocha --reporter=min --no-colors --require @babel/register --require babel-polyfill tests/*.js"
+    "test": "mocha --reporter=min --no-colors --require @babel/register --require babel-polyfill tests/*.js --exit"
   },
   "repository": {
     "type": "git",
