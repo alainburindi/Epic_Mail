@@ -21,6 +21,10 @@
   },
   "homepage": "https://github.com/alainburindi/Epic_Mail#readme",
   "devDependencies": {
+    
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.4",
     "@babel/node": "^7.2.2",
@@ -37,9 +41,6 @@
     "mocha": "^6.0.2",
     "nodemon": "^1.18.10",
     "nyc": "^13.3.0"
-  },
-  "dependencies": {
-    "babel-polyfill": "^6.26.0"
   },
   "engines": {
     "node": "10.6.0",
