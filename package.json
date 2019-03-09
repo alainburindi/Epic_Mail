@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon --exec babel-node app.js",
-    "test": "mocha --reporter=min --no-colors --require @babel/register --require babel-polyfill tests/*.js --exit"
+    "test": "nyc --repoter=html --repoter=text mocha --no-colors --require @babel/register --require babel-polyfill tests/*.js --exit",
+    "cover": "nyc --reporter=text npm test",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -29,16 +31,18 @@
     "bcrypt": "^3.0.4",
     "chai": "^4.2.0",
     "chai-http": "^4.2.1",
+    "coveralls": "^3.0.3",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.5.0",
     "mocha": "^6.0.2",
-    "nodemon": "^1.18.10"
+    "nodemon": "^1.18.10",
+    "nyc": "^13.3.0"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0"
   },
   "engines": {
-    "node" : "10.6.0",
-    "npm" : "6.1.0"
+    "node": "10.6.0",
+    "npm": "6.1.0"
   }
 }
