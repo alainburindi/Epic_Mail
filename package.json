@@ -2,7 +2,7 @@
   "name": "Epic_Mail",
   "version": "1.0.0",
   "description": "Epic_Mail bootcamp challenge",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "nodemon --exec babel-node app.js",
     "test": "mocha --reporter=min --no-colors --require @babel/register --require babel-polyfill tests/*.js --exit"
@@ -36,5 +36,9 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0"
+  },
+  "engines": {
+    "node" : "10.6.0",
+    "npm" : "6.1.0"
   }
 }
