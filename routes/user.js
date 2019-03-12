@@ -1,10 +1,15 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import Joi from 'joi';
 
 import checkAuth from '../middleware/check-auth';
 
 import UserController from '../controllers/user';
+import Validator from '../middleware/validator';
+
+
+
 
 const userRoutes = express.Router()
 const userController = new UserController()
@@ -18,67 +23,67 @@ userRoutes.get('/', checkAuth, (req, res, next) => {
     })
 })
 
-function validateEmail(mail) {
- if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)){
-    return (true)
-  }
-    return (false)
-}
-
 userRoutes.post('/signup', (req, res, next) => {
 
     const email = req.body.email
-    if(validateEmail(email)){
-        userController.checkIfExist(email).then(result =>{
-            if(result){
-                return res.status(409).json({
-                    status : 409,
-                    error : 'user with the same email already exists'
-                })
-            }else{
-                bcrypt.hash(req.body.password, 10, (err, hash) => {
-                    if (err) {
-                        return res.status(500).json({
-                            status : 500,
-                            error : error+""
-                        })
-                    }else{
-                        const user = new User(1, req.body.name, req.body.email, hash)
-                        userController.save(user).then(result => {
-                            const token = jwt.sign(
-                                {
-                                    email :user.email,
-                                    userId : user.id
-                                }, 
-                                "alainsecretkey",
-                                {
-                                    expiresIn: "1h"
-                                }
-                            )
-                            res.status(201).json({
-                                status : 201,
-                                data : [{token : token}]
-                            })
-                        }).catch(err => {
-                            console.log(err)
-                            res.status(500).json({
-                                error : err
-                            })
-                        })
-                    }
-                })
-            }
-        })
-    }else{
-        return res.status(409).json({
-            status : 409,
-            error : 'invalid email address'
+    const validate = Validator.schemaSignUp(req.body )
+    if(validate.error){
+        return res.status(422).json({
+            status : 422 ,
+            error : validate.error
         })
     }
+    userController.checkIfExist(email).then(result =>{
+        if(result){
+            return res.status(409).json({
+                status : 409,
+                error : 'user with the same email already exists'
+            })
+        }else{
+            bcrypt.hash(req.body.password, 10, (err, hash) => {
+                if (err) {
+                    return res.status(500).json({
+                        status : 500,
+                        error : error+""
+                    })
+                }else{
+                    const user = new User(1, req.body.name, req.body.email, hash)
+                    userController.save(user).then(result => {
+                        const token = jwt.sign(
+                            {
+                                email :user.email,
+                                userId : user.id
+                            }, 
+                            "alainsecretkey",
+                            {
+                                expiresIn: "1h"
+                            }
+                        )
+                        res.status(201).json({
+                            status : 201,
+                            data : [{token : token}]
+                        })
+                    }).catch(err => {
+                        console.log(err)
+                        res.status(500).json({
+                            error : err
+                        })
+                    })
+                }
+            })
+        }
+    })
 })
 
 userRoutes.post('/login', (req, res, next) => {
     const email = req.body.email
+    const validate = Joi.validate(req.body, schemaSignIn)
+    if(validate.error){
+        return res.status(422).json({
+            status : 422 ,
+            error : validate.error
+        })
+    }
     userController.checkIfExist(email).then(user => {
         if(user){
             bcrypt.compare(req.body.password, user.password, (err, result) => {

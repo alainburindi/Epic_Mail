@@ -5,7 +5,7 @@ const app = express()
 
 import userRoutes from './routes/user'
 import messageRoutes from './routes/messages';
-const port = process.env.PORT || 4000
+const port = process.env.PORT || 3000
 
 const todo = [
     { id: 1, description: 'Clean the house', createdOn: '08/02/2019' },

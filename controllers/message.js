@@ -6,7 +6,6 @@ export default class MessageController {
         this.messagesList = []
         this.sentMessages = []
         this.inboxMessages = []
-        this.initMessages()
     }
 
     async addMessage(message){
@@ -15,20 +14,6 @@ export default class MessageController {
 
     getMessages(){
         return this.messagesList;
-    }
-
-    initMessages(){
-        const date = new Date()
-        const message = new Message(1,date.toLocaleString('en-us'), "greetings", "hey! how are you?", 0, "unread")
-        const message2 = new Message(2,date.toLocaleString('en-us'), "re-greetings", "hey! i'm fine, and you?", 1, "sent")
-        this.inboxMessages.push(
-            new InboxMessage(auth.userId, message.id, message.createdOn)
-        )
-        this.sentMessages.push(
-            new SentMessage(auth.userId, message2.id, message.createdOn)
-        )
-        this.messagesList.push(message)
-        this.messagesList.push(message2)
     }
 
     getReceivedEmail(){
@@ -74,11 +59,6 @@ export default class MessageController {
         }else{
             return false
         }
-        // for (const index in this.messagesList) {
-        //     if (this.messagesList[index].id === parseInt(id, 10) ) {
-        //         messagesList.splice(index, 1)
-        //     }
-        // }
     }
 
     async createMessage(data){
