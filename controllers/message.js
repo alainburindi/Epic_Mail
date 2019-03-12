@@ -62,10 +62,15 @@ export default class MessageController {
     }
 
     async createMessage(data){
-        const id = this.messagesList[this.messagesList.length-1].id+1
+        let id 
+        if(this.messagesList.length != 0){
+            id = this.messagesList[this.messagesList.length-1].id+1
+        }else{
+            id = 1
+        }
         const date = new Date()
         const parent = (data.parentMessageId) ? data.parentMessageId : 0
-        const message = new Message(id, date.toLocaleDateString('en-us'), data.subject, data.message, parent, 'sent')
+        const message = new Message(id, date.toLocaleString('en-us'), data.subject, data.message, parent, 'sent')
         this.messagesList.push(message)
         this.sentMessages.push(new SentMessage(auth.userId, message.id, date.toLocaleDateString('en-us')));
         return message;
