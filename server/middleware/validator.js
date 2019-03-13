@@ -19,4 +19,20 @@ export default class Validator {
         }
         return Joi.validate(user, userSchema);
     }
+
+    static schemaParamsId (params){
+        const idSchema = {
+            id : Joi.number().min(1),
+        }
+        return Joi.validate(params, idSchema)
+    }
+
+    static schemaMessage(message){
+        const schema = {
+            subject : Joi.string().default('no-subject'),
+            message : Joi.string().required(),
+            parentMessageId : Joi.number(),
+        }
+        return Joi.validate(message, schema)
+    }
 }
