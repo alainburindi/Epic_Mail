@@ -3,8 +3,8 @@ import bodyParser from 'body-parser';
 
 const app = express()
 
-import userRoutes from './routes/user'
-import messageRoutes from './routes/messages';
+import userRoutes from './server/routes/user'
+import messageRoutes from './server/routes/messages';
 const port = process.env.PORT || 3000
 
 const todo = {
