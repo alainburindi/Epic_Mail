@@ -72,4 +72,58 @@ userRoutes.post('/signup', (req, res, next) => {
     })
 })
 
+userRoutes.post('/login', (req, res, next) => {
+    const email = req.body.email
+    const validate = Validator.schemaSignIn(req.body )
+    if(validate.error){
+        return res.status(422).json({
+            status : 422 ,
+            error : validate.error
+        })
+    }
+    userController.checkIfExist(email).then(user => {
+        if(user){
+            bcrypt.compare(req.body.password, user.password, (err, result) => {
+                if (err) {
+                    return res.status(401).json({
+                        status : 401,
+                        error : 'Authentication failed, please check your credentials'
+                    })
+                }
+                if (result){
+                    const token = jwt.sign(
+                        {
+                            email : user.email,
+                            userId : user.id
+                        }, 
+                        "alainsecretkey",
+                        {
+                            expiresIn: "1h"
+                        }
+                    )
+                    res.status(200).json({
+                        status : 200,
+                        data : [{token : token}]
+                    })
+                }else{
+                    return res.status(401).json({
+                        status : 401,
+                        error : 'Authentication failed, please check your credentials'
+                    })
+                }
+            })
+            
+        }else{
+            return res.status(401).json({
+                status : 401,
+                error : 'Authentication failed, please check your credentials'
+            })
+        }
+    }).catch(err => {
+        console.log(err)
+        res.status(500).json({
+            error : err
+        })
+    })
+})
 export default userRoutes;

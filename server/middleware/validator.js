@@ -10,4 +10,13 @@ export default class Validator {
         }
         return Joi.validate(user, userSchema);
     }
+
+    static schemaSignIn(user) {
+        const userSchema ={
+            name: Joi.string().required(),
+            email : Joi.string().email().required(),
+            password : Joi.string().regex(/^[a-zA-Z0-9]{6,16}$/).min(6).required(),
+        }
+        return Joi.validate(user, userSchema);
+    }
 }
