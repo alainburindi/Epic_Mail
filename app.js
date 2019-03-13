@@ -14,6 +14,7 @@ const todo = {
 
     "POST/" : {
         "auth/signup" : "register a new user",
+        "auth/login" : "login a registered user",
     },
  }
 app.use(bodyParser.urlencoded({extended : true}))
@@ -51,4 +52,3 @@ app.use((error, req, res, next) => {
 app.listen(port)
 
 module.exports = app;
-
