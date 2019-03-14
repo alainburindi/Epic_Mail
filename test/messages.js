@@ -121,6 +121,18 @@ describe('Get with authentification', () => {
         })
     })
 
+    it('should return an error if id doesn\'t exist', (done) => {
+        chai.request(server)
+        .get('/api/v1/messages/100')
+        .set('Authorization', `Bearer ${token}`)
+        .end((err, res) => {
+            res.body.should.have.status(200)
+            res.body.should.be.an('Object')
+            res.body.should.have.property('data')
+            done()
+        })
+    })
+
     it('should return an error if id is not a number', (done) => {
         chai.request(server)
         .get('/api/v1/messages/r')
@@ -207,4 +219,44 @@ describe('Post with authentification', () => {
             done()
         })
     })
+})
+
+describe('DELETE without authentification', () => {
+    it("should send the correct error", (done) =>{
+        chai.request(server)
+        .delete('/api/v1/messages/1')
+        .end((err, res) => {
+            res.body.should.have.status(401)
+            res.body.should.be.an('Object')
+            res.body.should.have.property('error').equal("Authentication failed, please check your credentials")
+            done()
+        })
+    })
+})
+
+describe('DELETE with authentification', () => {
+    it("should delete the specified message", (done) =>{
+        chai.request(server)
+        .delete('/api/v1/messages/1')
+        .set('Authorization', `Bearer ${token}`)
+        .end((err, res) => {
+            res.body.should.have.status(200)
+            res.body.should.be.an('Object')
+            res.body.should.have.property('data')
+            done()
+        })
+    })
+
+    it("should send an error if id is not a number", (done) =>{
+        chai.request(server)
+        .delete('/api/v1/messages/l')
+        .set('Authorization', `Bearer ${token}`)
+        .end((err, res) => {
+            res.body.should.have.status(422)
+            res.body.should.be.an('Object')
+            res.body.should.have.property('error')
+            done()
+        })
+    })
+    
 })
