@@ -3,7 +3,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 
 
-const server = require( '../../app');
+const server = require( '../app');
 const should = chai.should();
 
 chai.use(chaiHttp);
