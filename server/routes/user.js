@@ -1,6 +1,9 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import dontenv from 'dotenv';
+dontenv.config()
+
 import checkAuth from '../middleware/check-auth';
 
 import UserController from '../controllers/user';
@@ -51,7 +54,7 @@ userRoutes.post('/signup', (req, res, next) => {
                                 email :user.email,
                                 userId : user.id
                             }, 
-                            "alainsecretkey",
+                            process.env.TOKEN_KEY,
                             {
                                 expiresIn: "1h"
                             }
@@ -96,7 +99,7 @@ userRoutes.post('/login', (req, res, next) => {
                             email : user.email,
                             userId : user.id
                         }, 
-                        "alainsecretkey",
+                        process.env.TOKEN_KEY,
                         {
                             expiresIn: "1h"
                         }
