@@ -49,20 +49,7 @@ userRoutes.post('/signup', (req, res, next) => {
                 }else{
                     const user = new User(1, req.body.name, req.body.email, hash)
                     userController.save(user).then(result => {
-                        const token = jwt.sign(
-                            {
-                                email :user.email,
-                                userId : user.id
-                            }, 
-                            process.env.TOKEN_KEY,
-                            {
-                                expiresIn: "1h"
-                            }
-                        )
-                        res.status(201).json({
-                            status : 201,
-                            data : [{token : token}]
-                        })
+                        sendToken(user, res, 201)
                     }).catch(err => {
                         console.log(err)
                         res.status(500).json({
@@ -88,39 +75,17 @@ userRoutes.post('/login', (req, res, next) => {
         if(user){
             bcrypt.compare(req.body.password, user.password, (err, result) => {
                 if (err) {
-                    return res.status(401).json({
-                        status : 401,
-                        error : 'Authentication failed, please check your credentials'
-                    })
+                    authFails(res);
                 }
                 if (result){
-                    const token = jwt.sign(
-                        {
-                            email : user.email,
-                            userId : user.id
-                        }, 
-                        process.env.TOKEN_KEY,
-                        {
-                            expiresIn: "1h"
-                        }
-                    )
-                    res.status(200).json({
-                        status : 200,
-                        data : [{token : token}]
-                    })
+                    sendToken(user, res, 200)
                 }else{
-                    return res.status(401).json({
-                        status : 401,
-                        error : 'Authentication failed, please check your credentials'
-                    })
+                    authFails(res);
                 }
             })
             
         }else{
-            return res.status(401).json({
-                status : 401,
-                error : 'Authentication failed, please check your credentials'
-            })
+            authFails(res);
         }
     }).catch(err => {
         console.log(err)
@@ -129,4 +94,30 @@ userRoutes.post('/login', (req, res, next) => {
         })
     })
 })
+
+function sendToken(user, res, status) {
+    const token = jwt.sign(
+        {
+            email : user.email,
+            userId : user.id
+        }, 
+        process.env.TOKEN_KEY,
+        {
+            expiresIn: "1h"
+        }
+    )
+    return res.status(status).json({
+        status : status,
+        data : [{token : token}]
+    })
+}
+
+function authFails(res) {
+    return res.status(401).json({
+        status : 401,
+        error : 'Authentication failed, please check your credentials'
+    })
+}
+
+
 export default userRoutes;
