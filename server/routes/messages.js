@@ -11,35 +11,23 @@ import Validator from '../middleware/validator';
 const messageController = new MessageController()
 messageRoutes.get('/', checkAuth, (req, res, next) => {
     const message = messageController.getReceivedEmail();
-    res.status(200).json({
-        status : 200,
-        data :  message.length > 0 ? message : "no received message for you"
-    })
+    returnMessage(message, res)
 })
 
 messageRoutes.get('/unread', checkAuth, (req, res, next) => {
     const message = messageController.getUnreadEmail()
-    res.status(200).json({
-        status : 200,
-        data :  message.length > 0 ? message : "no unread message for you"
-    })
+        returnMessage(message, res)
 })
 
 messageRoutes.get('/sent', checkAuth, (req, res, next) => {
     const message = messageController.getSentEmail()
-    res.status(200).json({
-        status : 200,
-        data :  message.length > 0  ? message : "no sent message for you"
-    })
+        returnMessage(message, res)
 })
 
 messageRoutes.get('/:id', checkAuth, (req, res, next) => {
     const validate = Validator.schemaParamsId(req.params )
     if(validate.error){
-        return res.status(422).json({
-            status : 422 ,
-            error : validate.error
-        })
+        validationError(res, validate.error)
     }
     const message = messageController.getMessage(req.params.id)
     res.status(200).json({
@@ -51,10 +39,7 @@ messageRoutes.get('/:id', checkAuth, (req, res, next) => {
 messageRoutes.delete('/:id', checkAuth, (req, res, next) => {
     const validate = Validator.schemaParamsId(req.params )
     if(validate.error){
-        return res.status(422).json({
-            status : 422 ,
-            error : validate.error
-        })
+        validationError(res, validate.error)
     }
     if (messageController.deleteMessage(req.params.id)) {
         res.status(200).json({
@@ -73,10 +58,8 @@ messageRoutes.delete('/:id', checkAuth, (req, res, next) => {
 messageRoutes.post('/', checkAuth, (req, res, next) => {
     const validate = Validator.schemaMessage(req.body )
     if(validate.error){
-        return res.status(422).json({
-            status : 422 ,
-            error : validate.error
-        })
+        validationError(res, validate.error)
+
     }
     if (!req.body.subject){
         req.body.subject = 'no-subject'
@@ -94,11 +77,23 @@ messageRoutes.post('/', checkAuth, (req, res, next) => {
             })
         }
     }).catch(err => {
-        console.log(err)
         res.status(500).json({
             error : err
         })
     })
 })
 
+function returnMessage(message, res) {
+    res.status(200).json({
+        status : 200,
+        data :  message.length > 0  ? message : "no message for you"
+    })
+}
+
+function validationError(res, error) {
+     res.status(422).json({
+        status : 422 ,
+        error : error
+    })
+}
 export default messageRoutes;
