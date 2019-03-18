@@ -19,7 +19,7 @@ Epic_Mail bootcamp challenge
 **EpicMail** uses a number of open source projects to work properly:
 
 * [node.js] - evented I/O for the backend
-* [Express] - fast node.js network app framework [@tjholowaychuk]
+* [Express] - fast node.js network app framework 
 * [JsonwebToken] -For API authentification
 
 And of course **EpicMail** itself is open source with a [public repository] on GitHub.
@@ -36,6 +36,7 @@ $ cd Epic_Mail
 $ npm install -d
 $ npm start
 ```
+then use this link to test : localhost:300
 
 # Usage
 
@@ -87,8 +88,9 @@ on the body tab select **x-www-form-urlencoded** or on the raw tab  **select JSO
     * Content-Type : Application/json
     * Token : Bearer + toke got from **/auth/login** or **/auth/sigup**
   * Body (param and value)
-    * subject : "the suvject if empty **"no subject"** will be put
+    * subject : "the subject, if empty **"no subject"** will be put
     * message : "the content of your message"
+    * to : the receiver's email
 
 ### DELETE endpoints
 * **"/api/v1/messages/:id"** : "delete a specific message"

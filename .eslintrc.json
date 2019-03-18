@@ -16,7 +16,7 @@
     "rules": {
         "indent": [
             "error",
-             4, 8
+            8
         ],
         "linebreak-style": [
             "error",
