@@ -104,6 +104,20 @@ describe('Signin', () => {
         })
     })
 
+    it('should not login if the password is incorect', (done) => {
+        chai.request(server)
+        .post('/api/v1/auth/login')
+        .send({
+            email : 'alain@gmail.com',
+            password : "passwor1",
+        })
+        .end((err, res) => {
+            res.body.should.have.status(401)
+            res.body.should.be.an('Object')
+            res.body.should.have.property('error')
+            done()
+        })
+    })
     it('should not login a user if body is empty', (done) => {
         chai.request(server)
         .post('/api/v1/auth/login')

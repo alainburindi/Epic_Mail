@@ -56,22 +56,90 @@ describe('Get without authentification', () => {
     })
 })
 
-describe('Get with authentification', () => {
-        it('should login and give the token', (done) => {
-            chai.request(server)
-            .post('/api/v1/auth/login')
-            .send({
-                email : 'alain@gmail.com',
-                password : "password",
-            })
-            .end((err, res) => {
-                res.body.should.have.status(200)
-                res.body.should.be.an('Object')
-                res.body.should.have.property('data')
-                token = res.body.data[0].token
-                done()
-            })
+describe('Post with authentification', () => {
+    it('should login and give the token', (done) => {
+        chai.request(server)
+        .post('/api/v1/auth/login')
+        .send({
+            email : 'alain@gmail.com',
+            password : "password",
         })
+        .end((err, res) => {
+            res.body.should.have.status(200)
+            res.body.should.be.an('Object')
+            res.body.should.have.property('data')
+            token = res.body.data[0].token
+            done()
+        })
+    })
+    it('should return a created email', (done) => {
+        chai.request(server)
+        .post('/api/v1/messages')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            subject : "fisrt test",
+            message : "this is the content",
+            to : "alain@gmail.com"
+        })
+        .end((err, res) => {
+            res.body.should.have.status(201)
+            res.body.should.be.an('Object')
+            res.body.should.have.property('data')
+            done()
+        })
+    })
+
+    it('should return an error if user is not found', (done) => {
+        chai.request(server)
+        .post('/api/v1/messages')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            subject : "fisrt test",
+            message : "this is the content",
+            to : "unregistered@gmail.com"
+        })
+        .end((err, res) => {
+            res.body.should.have.status(404)
+            res.body.should.be.an('Object')
+            res.body.should.have.property('error')
+            done()
+        })
+    })
+
+    it('should return an error if message field is missing', (done) => {
+        chai.request(server)
+        .post('/api/v1/messages')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            subject : "fisrt test",
+        })
+        .end((err, res) => {
+            res.body.should.have.status(422)
+            res.body.should.be.an('Object')
+            res.body.should.have.property('error')
+            done()
+        })
+    })
+
+    it('should return an error if the body contains unnecessary field', (done) => {
+        chai.request(server)
+        .post('/api/v1/messages')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            subject : "fisrt test",
+            message : "thi is the content",
+            unecessary : "unecessary"
+        })
+        .end((err, res) => {
+            res.body.should.have.status(422)
+            res.body.should.be.an('Object')
+            res.body.should.have.property('error')
+            done()
+        })
+    })
+})
+
+describe('Get with authentification', () => {
     it('should return received email data', (done) => {
         chai.request(server)
         .get('/api/v1/messages')
@@ -166,74 +234,6 @@ describe('Post without authentification', () => {
             res.body.should.have.status(401)
             res.body.should.be.an('Object')
             res.body.should.have.property('error').equal("Authentication failed, please check your credentials")
-            done()
-        })
-    })
-})
-
-describe('Post with authentification', () => {
-    it('should return a created email', (done) => {
-        chai.request(server)
-        .post('/api/v1/messages')
-        .set('Authorization', `Bearer ${token}`)
-        .send({
-            subject : "fisrt test",
-            message : "this is the content",
-            to : "alain@gmail.com"
-        })
-        .end((err, res) => {
-            res.body.should.have.status(201)
-            res.body.should.be.an('Object')
-            res.body.should.have.property('data')
-            done()
-        })
-    })
-
-    it('should return an error if user is not found', (done) => {
-        chai.request(server)
-        .post('/api/v1/messages')
-        .set('Authorization', `Bearer ${token}`)
-        .send({
-            subject : "fisrt test",
-            message : "this is the content",
-            to : "unregistered@gmail.com"
-        })
-        .end((err, res) => {
-            res.body.should.have.status(404)
-            res.body.should.be.an('Object')
-            res.body.should.have.property('error')
-            done()
-        })
-    })
-
-    it('should return an error if message field is missing', (done) => {
-        chai.request(server)
-        .post('/api/v1/messages')
-        .set('Authorization', `Bearer ${token}`)
-        .send({
-            subject : "fisrt test",
-        })
-        .end((err, res) => {
-            res.body.should.have.status(422)
-            res.body.should.be.an('Object')
-            res.body.should.have.property('error')
-            done()
-        })
-    })
-
-    it('should return an error if the body contains unnecessary field', (done) => {
-        chai.request(server)
-        .post('/api/v1/messages')
-        .set('Authorization', `Bearer ${token}`)
-        .send({
-            subject : "fisrt test",
-            message : "thi is the content",
-            unecessary : "unecessary"
-        })
-        .end((err, res) => {
-            res.body.should.have.status(422)
-            res.body.should.be.an('Object')
-            res.body.should.have.property('error')
             done()
         })
     })

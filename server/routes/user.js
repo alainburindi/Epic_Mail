@@ -55,11 +55,6 @@ userRoutes.post('/signup', (req, res, next) => {
                     const user = new User(id, req.body.name, req.body.email, hash)
                     userController.save(user).then(result => {
                         sendToken(user, res, 201)
-                    }).catch(err => {
-                        console.log(err)
-                        res.status(500).json({
-                            error : err
-                        })
                     })
                 }
             })
@@ -92,11 +87,6 @@ userRoutes.post('/login', (req, res, next) => {
         }else{
             authFails(res);
         }
-    }).catch(err => {
-        console.log(err)
-        res.status(500).json({
-            error : err
-        })
     })
 })
 

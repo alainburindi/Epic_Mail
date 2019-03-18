@@ -6,15 +6,6 @@ export default class MessageController {
     constructor() {
         this.messagesList = []
         this.sentMessages = []
-        // this.inboxMessages = []
-    }
-
-    async addMessage(message){
-        this.messagesList.push(message)
-    }
-
-    getMessages(){
-        return this.messagesList;
     }
 
     getReceivedEmail(userId){
@@ -87,14 +78,6 @@ export default class MessageController {
         return message;
     }
 }
-
-// export class InboxMessage{
-//     constructor(receverId, messageId, createdOn) {
-//         this.receverId = receverId,
-//         this.messageId = messageId,
-//         this.createdOn = createdOn
-//     }
-// }
 
 export class SentMessage{
     constructor(receiverId, messageId,status, createdOn) {
