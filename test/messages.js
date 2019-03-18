@@ -178,12 +178,30 @@ describe('Post with authentification', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({
             subject : "fisrt test",
-            message : "thi is the content"
+            message : "this is the content",
+            to : "alain@gmail.com"
         })
         .end((err, res) => {
             res.body.should.have.status(201)
             res.body.should.be.an('Object')
             res.body.should.have.property('data')
+            done()
+        })
+    })
+
+    it('should return an error if user is not found', (done) => {
+        chai.request(server)
+        .post('/api/v1/messages')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            subject : "fisrt test",
+            message : "this is the content",
+            to : "unregistered@gmail.com"
+        })
+        .end((err, res) => {
+            res.body.should.have.status(404)
+            res.body.should.be.an('Object')
+            res.body.should.have.property('error')
             done()
         })
     })

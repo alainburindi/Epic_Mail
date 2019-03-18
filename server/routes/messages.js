@@ -26,10 +26,6 @@ messageRoutes.get('/unread', checkAuth, (req, res, next) => {
 messageRoutes.get('/sent', checkAuth, (req, res, next) => {
     const message = messageController.getSentEmail(req.userData.userId)
         returnMessage(message, res)
-    // res.status(200).json({
-    //     status : 200,
-    //     data :  req.userData
-    // })
 })
 
 messageRoutes.get('/:id', checkAuth, (req, res, next) => {
@@ -38,18 +34,10 @@ messageRoutes.get('/:id', checkAuth, (req, res, next) => {
         validationError(res, validate.error)
     }
     const message = messageController.getMessage(req.params.id)
-    if (message.userId === parseInt(req.userData.userId)) {
-        res.status(200).json({
-            status : 200,
-            data :  message ? message : "message not found"
-        })
-    }else{
-        res.status(403).json({
-            status : 403,
-            data :  message ? message : "not your message"
-        })
-    }
-    
+    res.status(200).json({
+        status : 200,
+        data :  message ? message : "message not found"
+    })
 })
 
 messageRoutes.delete('/:id', checkAuth, (req, res, next) => {
