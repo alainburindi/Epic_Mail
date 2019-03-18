@@ -76,16 +76,7 @@ messageRoutes.post('/', checkAuth, (req, res, next) => {
                         status : 201,
                         data : result
                     })
-                }else{
-                    res.status(500).json({
-                        status : 500,
-                        error : "error while saving"
-                    })
                 }
-            }).catch(err => {
-                res.status(500).json({
-                    error : err+""
-                })
             })
         }else{
             return res.status(404).json({
@@ -94,10 +85,6 @@ messageRoutes.post('/', checkAuth, (req, res, next) => {
                 users : userController.usersList
             })
         }
-    }).catch(err => {
-        res.status(500).json({
-            error : err+""
-        })
     })
 })
 
