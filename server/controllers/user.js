@@ -10,4 +10,8 @@ export default class UserController {
     async checkIfExist(email){
         return this.usersList.find( user => user.email === email );
     }
+
+    find(id){
+        return this.usersList.find( user => user.id === id );
+    }
 }

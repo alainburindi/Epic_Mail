@@ -13,14 +13,13 @@ import Validator from '../middleware/validator';
 
 
 const userRoutes = express.Router()
-const userController = new UserController()
+export const userController = new UserController()
 
 import User from '../models/user';
 
 userRoutes.get('/', checkAuth, (req, res, next) => {
     res.status(200).json({
         users : userController.usersList, 
-        user : req.userData
     })
 })
 
@@ -47,14 +46,15 @@ userRoutes.post('/signup', (req, res, next) => {
                         error : error+""
                     })
                 }else{
-                    const user = new User(1, req.body.name, req.body.email, hash)
+                    let id 
+                    if(userController.usersList.length != 0){
+                        id = userController.usersList[userController.usersList.length-1].id+1
+                    }else{
+                        id = 1
+                    }
+                    const user = new User(id, req.body.name, req.body.email, hash)
                     userController.save(user).then(result => {
                         sendToken(user, res, 201)
-                    }).catch(err => {
-                        console.log(err)
-                        res.status(500).json({
-                            error : err
-                        })
                     })
                 }
             })
@@ -87,11 +87,6 @@ userRoutes.post('/login', (req, res, next) => {
         }else{
             authFails(res);
         }
-    }).catch(err => {
-        console.log(err)
-        res.status(500).json({
-            error : err
-        })
     })
 })
 

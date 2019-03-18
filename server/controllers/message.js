@@ -1,44 +1,46 @@
 import Message from '../models/message';
 import auth from '../middleware/check-auth'
+import { userController } from '../routes/user';
 
 export default class MessageController {
     constructor() {
         this.messagesList = []
         this.sentMessages = []
-        this.inboxMessages = []
     }
 
-    async addMessage(message){
-        this.messagesList.push(message)
-    }
-
-    getMessages(){
-        return this.messagesList;
-    }
-
-    getReceivedEmail(){
+    getReceivedEmail(userId){
         let received = []
-        for (const inbox of this.inboxMessages) {
-            received.push(this.messagesList.find( message => message.id === inbox.messageId
-            ))
+        for (const sent of this.sentMessages) {
+            const found = this.messagesList.find( message => message.id === sent.messageId && sent.receiverId === userId)
+            if(found != null)
+            received.push(found)
         }
         return received;
     }
 
-    getUnreadEmail(){
+    getUnreadEmail(userId){
         let unread = []
-        for (const inbox of this.inboxMessages) {
-            unread.push(this.messagesList.find( message => message.id === inbox.messageId && message.status == "unread"))
+        for (const sent of this.sentMessages) {
+            const found = this.messagesList.find( message => message.id === sent.messageId && sent.receiverId === parseInt(userId, 10)  && sent.status == "unread")
+            if(found != null){
+               const user =  userController.find(found.userId)
+                if(user){
+                    delete found.userId
+                    found["from"] = user.email
+                }
+                found["status"] = sent.status
+                unread.push(found)
+            }
         }
-        unread.length > 1 ? unread.length = unread.length-1 : unread
         return unread;
     }
 
-    getSentEmail(){
+    getSentEmail(userId){
         let sent = []
         for (const s of this.sentMessages) {
-            sent.push(this.messagesList.find( message => message.id === s.messageId
-            ))
+            const found = this.messagesList.find( message => message.id === s.messageId && message.userId === parseInt(userId, 10))
+            if (found != null) 
+            sent.push(found)
         }
         return sent;
     }
@@ -69,26 +71,19 @@ export default class MessageController {
             id = 1
         }
         const date = new Date()
-        const parent = (data.parentMessageId) ? data.parentMessageId : 0
-        const message = new Message(id, date.toLocaleString('en-us'), data.subject, data.message, parent, 'sent')
+        const parent = (data.body.parentMessageId) ? data.parentMessageId : 0
+        const message = new Message(id, date.toLocaleString('en-us'), data.body.subject, data.body.message, parent, data.userData.userId)
         this.messagesList.push(message)
-        this.sentMessages.push(new SentMessage(auth.userId, message.id, date.toLocaleDateString('en-us')));
+        this.sentMessages.push(new SentMessage(data.body.to, message.id,"unread", date.toLocaleDateString('en-us')));
         return message;
     }
 }
 
-export class InboxMessage{
-    constructor(receverId, messageId, createdOn) {
-        this.receverId = receverId,
-        this.messageId = messageId,
-        this.createdOn = createdOn
-    }
-}
-
 export class SentMessage{
-    constructor(senderId, messageId, createdOn) {
-        this.senderId = senderId,
+    constructor(receiverId, messageId,status, createdOn) {
+        this.receiverId = receiverId,
         this.messageId = messageId,
+        this.status = status,
         this.createdOn = createdOn
     }
 }
