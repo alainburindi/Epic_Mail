@@ -30,6 +30,7 @@ export default class Validator {
         const schema = {
             subject : Joi.string().default('no-subject'),
             message : Joi.string().required(),
+            to : Joi.string().email().required(),
             parentMessageId : Joi.number(),
         }
         return Joi.validate(message, schema)
