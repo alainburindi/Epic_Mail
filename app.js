@@ -5,6 +5,8 @@ const app = express()
 
 import userRoutes from './server/routes/user'
 import messageRoutes from './server/routes/messages'
+import userRoutes2 from './server/routes/v2/user'
+
 const port = process.env.PORT || 3000
 
 const todo = {
@@ -30,9 +32,12 @@ app.use(bodyParser.urlencoded({extended : true}))
 app.use(bodyParser.json())
 
 const v1 = "/api/v1";
+const v2 = "/api/v2";
 
 app.use(`${v1}/auth`, userRoutes)
 app.use(`${v1}/messages`, messageRoutes)
+app.use(`${v2}/auth`, userRoutes2)
+
 
 
 app.get('/',(req, res, next) => {

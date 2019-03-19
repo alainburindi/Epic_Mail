@@ -6,3 +6,4 @@ env:
   global:
   - NODE_ENV="development"
   - TOKEN_KEY="alainsecretkey"
+  - DATABASE_URL=postgres://postgres@127.0.0.1:5432/epic_mail
