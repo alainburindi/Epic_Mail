@@ -61,6 +61,33 @@ export default class MessageController {
             })
         })
     }
+
+    static received(req, res, next){
+        const {userId} = req.userData
+        const query = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as from FROM Messages as m INNER JOIN Users as u ON m.userid = u.id WHERE receiverid = $1"
+        const values = [userId]
+        db(query, values, (err, result) => {
+            if (err)
+            return next(err)
+            if(result.rowCount > 0){
+                res.status(200).json({
+                    data : [result.rows]
+                })
+            }else{
+                res.status(200).json({
+                    data : "no message for you"
+                })
+            }
+        })
+    }
+
+    validationError(res, error) {
+        res.status(422).json({
+           status : 422 ,
+           error : error
+       })
+   }
+
     getReceivedEmail(userId){
         let received = []
         for (const sent of this.sentMessages) {
