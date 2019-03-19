@@ -38,7 +38,7 @@ export default class UserController {
                         if(err){
                             return next(err)
                         }
-                        Helper.sendToken(result.rows, res, 201)
+                        Helper.sendToken(result.rows[0], res, 201)
                     })            
                 }
                 })
@@ -49,6 +49,46 @@ export default class UserController {
                 })
             }
         })
+    }
+
+    static login(req, res, next){
+        const validate = Validator.schemaSignIn(req.body )
+        if(validate.error){
+            return res.status(422).json({
+                status : 422 ,
+                error : validate.error
+            })
+        }
+        const {email, password} = req.body
+        bcrypt.hash(req.body.password, 10, (err, hash) => {
+            if (err) {
+                return res.status(500).json({
+                    status : 500,
+                    error : err+""
+                })
+            }else{
+                const query = "SELECT * FROM Users WHERE email = $1";
+                const values = [email]
+                db(query, values, (err, result) => {
+                    if(err)
+                    return next(err)
+                    if(result.rowCount != 1)
+                    return res.status(401).json({
+                        status : 401,
+                        error : 'Authentication failed, please check your credentials'
+                    })
+                    const isValid = bcrypt.compareSync(password, result.rows[0].password)
+                    if (isValid){
+                        Helper.sendToken(result.rows[0], res, 200)
+                    }else{
+                        return res.status(401).json({
+                            status : 401,
+                            error : 'Authentication failed, please check your credentials'
+                        })
+                    }
+                })
+            }
+        });
     }
 }
 
