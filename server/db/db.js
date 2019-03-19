@@ -3,9 +3,6 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-// const pool = new Pool({
-//     connectionString: process.env.DATABASE_URL
-// })
 
 const pool = new Pool({
     user: 'postgres',

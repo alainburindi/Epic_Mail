@@ -4,10 +4,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export default class UserController {
-    // constructor(){
-    //     this.usersList =[];
-    // }
-
     static save(req, res, next){
         const email = req.body.email
         const validate = Validator.schemaSignUp(req.body )
@@ -17,36 +13,42 @@ export default class UserController {
                 error : validate.error
             })
         }
-        bcrypt.hash(req.body.password, 10, (err, hash) => {
-            if (err) {
-                return res.status(500).json({
-                    status : 500,
-                    error : err+""
+        //check if email is already in use
+        const sql = "SELECT * FROM Users WHERE email = $1";
+        db(sql, [email], (err, result) => {
+            if(err){
+                return next(err)
+            }
+            if(result.rowCount != 1){
+                bcrypt.hash(req.body.password, 10, (err, hash) => {
+                if (err) {
+                    return res.status(500).json({
+                        status : 500,
+                        error : err+""
+                    })
+                }else{
+                    const query = "INSERT INTO Users (name, email, password) VALUES ($1, $2, $3) RETURNING *";
+                    const {name, email} = req.body;
+                    const values = [
+                        name,
+                        email,
+                        hash
+                    ]
+                    db(query, values, (err, result) => {
+                        if(err){
+                            return next(err)
+                        }
+                        Helper.sendToken(result.rows, res, 201)
+                    })            
+                }
                 })
             }else{
-                const query = "INSERT INTO Users (name, email, password) VALUES ($1, $2, $3) RETURNING *";
-                const {name, email} = req.body;
-                const values = [
-                    name,
-                    email,
-                    hash
-                ]
-                db(query, values, (err, result) => {
-                    if(err){
-                        return next(err)
-                    }
-                    Helper.sendToken(result.rows, res, 201)
-                })            
+                return res.status(409).json({
+                    status : 409,
+                    error : 'user with the same email already exists'
+                })
             }
         })
-    }
-
-    async checkIfExist(email){
-        return this.usersList.find( user => user.email === email );
-    }
-
-    find(id){
-        return this.usersList.find( user => user.id === id );
     }
 }
 
