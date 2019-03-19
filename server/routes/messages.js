@@ -82,7 +82,6 @@ messageRoutes.post('/', checkAuth, (req, res, next) => {
             return res.status(404).json({
                 status : 404,
                 error : `${req.body.to} not found, make sure you typed a registered user`, 
-                users : userController.usersList
             })
         }
     })

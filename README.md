@@ -86,11 +86,12 @@ on the body tab select **x-www-form-urlencoded** or on the raw tab  **select JSO
 * **"/api/v1/auth/messages"** : "create/send a message"
   * Headers (param and value)
     * Content-Type : Application/json
-    * Token : Bearer + toke got from **/auth/login** or **/auth/sigup**
+    * Authorization : Bearer + toke got from **/auth/login** or **/auth/sigup**
   * Body (param and value)
     * subject : "the subject, if empty **"no subject"** will be put
     * message : "the content of your message"
     * to : the receiver's email
+    * parentMessageId : the parent message if it's a response to another message
 
 ### DELETE endpoints
 * **"/api/v1/messages/:id"** : "delete a specific message"
