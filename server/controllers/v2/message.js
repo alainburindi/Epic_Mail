@@ -75,6 +75,7 @@ export default class MessageController {
                 })
             }else{
                 res.status(200).json({
+                    status : 200,
                     data : "no message for you"
                 })
             }
@@ -94,6 +95,7 @@ export default class MessageController {
                 })
             }else{
                 res.status(200).json({
+                    status : 200,
                     data : "no message for you"
                 })
             }
@@ -118,7 +120,47 @@ export default class MessageController {
                 })
             }else{
                 res.status(200).json({
+                    status : 200,
                     data : "no message for you"
+                })
+            }
+        })
+    }
+
+    static find(req, res, next){
+        const validate = Validator.schemaParamsId(req.params )
+        if(validate.error){
+            res.status(422).json({
+                status : 422 ,
+                error : validate.error
+            })
+        }
+        const {userId} = req.userData
+        const query = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as to FROM Messages as m INNER JOIN Users as u ON m.receiverid = u.id WHERE userid = $1 AND m.id = $2"
+        const values = [userId, req.params.id]
+        db(query, values, (err, result) => {
+            if (err)
+            return next(err)
+            if(result.rowCount == 1){
+                result.rows[0].status = "sent";
+                res.status(200).json({
+                    data : result.rows[0]
+                })
+            }else{
+                const query = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as from FROM Messages as m INNER JOIN Users as u ON m.userid = u.id WHERE receiverid = $1 AND m.id = $2"
+                db(query, values, (err, result) => {
+                    if (err)
+                    return next(err)
+                    if(result.rowCount == 1){
+                        res.status(200).json({
+                            data : result.rows[0]
+                        })
+                    }else{
+                        res.status(200).json({
+                            status : 200,
+                            data : "message not found or access is denied"
+                        })
+                    }
                 })
             }
         })
