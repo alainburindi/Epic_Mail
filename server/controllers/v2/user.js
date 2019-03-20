@@ -14,8 +14,8 @@ export default class UserController {
             })
         }
         //check if email is already in use
-        const sql = "SELECT * FROM Users WHERE email = $1";
-        db(sql, [email], (err, result) => {
+        const fetchAUser = "SELECT * FROM Users WHERE email = $1";
+        db(fetchAUser, [email], (err, result) => {
             if(err){
                 return next(err)
             }
@@ -27,14 +27,14 @@ export default class UserController {
                         error : err+""
                     })
                 }else{
-                    const query = "INSERT INTO Users (name, email, password) VALUES ($1, $2, $3) RETURNING *";
+                    const saveAUser = "INSERT INTO Users (name, email, password) VALUES ($1, $2, $3) RETURNING *";
                     const {name, email} = req.body;
                     const values = [
                         name,
                         email,
                         hash
                     ]
-                    db(query, values, (err, result) => {
+                    db(saveAUser, values, (err, result) => {
                         if(err){
                             return next(err)
                         }
@@ -67,9 +67,9 @@ export default class UserController {
                     error : err+""
                 })
             }else{
-                const query = "SELECT * FROM Users WHERE email = $1";
+                const fetchAUser = "SELECT * FROM Users WHERE email = $1";
                 const values = [email]
-                db(query, values, (err, result) => {
+                db(fetchAUser, values, (err, result) => {
                     if(err)
                     return next(err)
                     if(result.rowCount != 1)
