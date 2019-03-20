@@ -346,7 +346,38 @@ export default class MessageController {
     }
     
     static sendSpecifcDraft(req, res, next) {
-        res.send("not yet done")
+        const validate = Validator.schemaParamsId(req.params )
+        if(validate.error){
+            res.status(422).json({
+                status : 422 ,
+                error : validate.error
+            })
+        }
+        const {userId} = req.userData
+        const query = "SELECT * FROM Messages WHERE id = $1 AND userid = $2 AND status = $3"
+        const values = [req.params.id, userId, 'draft']
+        db(query, values, (err, result) => {
+            if (err)
+                return next(err)
+            if(result.rowCount == 1){
+                const query = "UPDATE Messages SET status = $1 WHERE id = $2"; 
+                const values = ['unread', req.params.id];
+                db(query, values, (err, result) => {
+                    if(result.rowCount == 1){
+                        // result.rows[0].status = "sent"
+                        res.status(200).json({
+                            status : 200,
+                            message :   ["message sent corrctly"]
+                        })
+                    }
+                })
+            }else{
+                res.status(200).json({
+                    status : 200,
+                    data : "message not found or access is denied"
+                })
+            }    
+        })
     }
 }
 

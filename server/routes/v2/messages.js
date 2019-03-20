@@ -15,5 +15,6 @@ messagesRoutes2.get("/drafts/all", MessageController.getDrafts)
 messagesRoutes2.get("/drafts/get/:id", MessageController.getSpecifcDraft)
 messagesRoutes2.post("/drafts/save", MessageController.saveDraft)
 messagesRoutes2.delete("/drafts/delete/:id", MessageController.delSpecifcDraft)
+messagesRoutes2.post("/drafts/send/:id", MessageController.sendSpecifcDraft)
 
 export default messagesRoutes2
