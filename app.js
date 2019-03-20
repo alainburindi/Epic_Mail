@@ -8,6 +8,7 @@ import messageRoutes from './server/routes/messages'
 import userRoutes2 from './server/routes/v2/user'
 import checkAuth from './server/middleware/v2/check-auth';
 import messageRoutes2 from './server/routes/v2/messages'
+import groupsRoutes from './server/routes/v2/groups'
 
 
 const port = process.env.PORT || 3000
@@ -41,8 +42,7 @@ app.use(`${v1}/auth`, userRoutes)
 app.use(`${v1}/messages`, messageRoutes)
 app.use(`${v2}/auth`, userRoutes2)
 app.use(`${v2}/messages`, checkAuth, messageRoutes2)
-
-
+app.use(`${v2}/groups`, checkAuth, groupsRoutes)
 
 
 app.get('/',(req, res, next) => {
