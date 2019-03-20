@@ -206,76 +206,42 @@ export default class MessageController {
            status : 422 ,
            error : error
        })
-   }
-
-    getReceivedEmail(userId){
-        let received = []
-        for (const sent of this.sentMessages) {
-            const found = this.messagesList.find( message => message.id === sent.messageId && sent.receiverId === userId)
-            if(found != null)
-            received.push(found)
-        }
-        return received;
     }
 
-    getUnreadEmail(userId){
-        let unread = []
-        for (const sent of this.sentMessages) {
-            const found = this.messagesList.find( message => message.id === sent.messageId && sent.receiverId === parseInt(userId, 10)  && sent.status == "unread")
-            if(found != null){
-               const user =  userController.find(found.userId)
-                if(user){
-                    delete found.userId
-                    found["from"] = user.email
-                }
-                found["status"] = sent.status
-                unread.push(found)
+    static getDrafts (req, res, next) {
+        const {userId} = req.userData
+        const query = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as to FROM Messages as m INNER JOIN Users as u ON m.receiverid = u.id WHERE userid = $1 AND status = $2"
+        const values = [userId, 'draft']
+        db(query, values, (err, result) => {
+            if (err)
+            return next(err)
+            if(result.rowCount > 0){
+                res.status(200).json({
+                    data : [result.rows]
+                })
+            }else{
+                res.status(200).json({
+                    status : 200,
+                    data : "no message for you"
+                })
             }
-        }
-        return unread;
+        })
     }
 
-    getSentEmail(userId){
-        let sent = []
-        for (const s of this.sentMessages) {
-            const found = this.messagesList.find( message => message.id === s.messageId && message.userId === parseInt(userId, 10))
-            if (found != null) 
-            sent.push(found)
-        }
-        return sent;
+    static saveDraft(req, res, next) {
+        res.send("not yet done")
     }
 
-    getMessage(id){
-        return this.messagesList.find( message => message.id === parseInt(id, 10))
+    static delSpecifcDraft(req, res, next) {
+        res.send("not yet done")
     }
 
-     deleteMessage(id){
-        let deleted 
-        for (const index in this.messagesList) {
-            if (this.messagesList[index].id === parseInt(id, 10) ) {
-                deleted = this.messagesList.splice(index, 1)
-            }
-        }
-        if (deleted) {
-            return true
-        }else{
-            return false
-        }
+    static getSpecifcDraft(req, res, next) {
+        res.send("not yet done")
     }
-
-    async createMessage(data){
-        let id 
-        if(this.messagesList.length != 0){
-            id = this.messagesList[this.messagesList.length-1].id+1
-        }else{
-            id = 1
-        }
-        const date = new Date()
-        const parent = (data.body.parentMessageId) ? data.parentMessageId : 0
-        const message = new Message(id, date.toLocaleString('en-us'), data.body.subject, data.body.message, parent, data.userData.userId)
-        this.messagesList.push(message)
-        this.sentMessages.push(new SentMessage(data.body.to, message.id,"unread", date.toLocaleDateString('en-us')));
-        return message;
+    
+    static sendSpecifcDraft(req, res, next) {
+        res.send("not yet done")
     }
 }
 

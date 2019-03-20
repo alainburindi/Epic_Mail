@@ -15,3 +15,4 @@ const pool = new Pool({
 const query = (text, params, callback) => pool.query(text, params, callback)
 
 export default query;
+
