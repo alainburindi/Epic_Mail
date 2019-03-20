@@ -17,9 +17,9 @@ export default class MessageController {
         let {subject} = req.body
         const { to, message, parentMessageId} = req.body
         //check if email is already in use
-        const query = "SELECT * FROM Users WHERE email = $1";
+        const userFetchquery = "SELECT * FROM Users WHERE email = $1";
         const values = [to]
-        db(query, values, (err, users) => {
+        db(userFetchquery, values, (err, users) => {
             if(err)
                 return next(err)
             if(users.rowCount != 1)
@@ -28,7 +28,7 @@ export default class MessageController {
                     error : `${req.body.to} not found, make sure you typed a registered user`, 
                 })
             const {id, email} = users.rows[0] 
-            const query = "INSERT INTO Messages (subject, message, status, parentMessageId, userId, receiverId) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *";
+            const createMessageQuery = "INSERT INTO Messages (subject, message, status, parentMessageId, userId, receiverId) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *";
             if (!subject){
                 subject = 'no-subject'
             }
@@ -40,7 +40,7 @@ export default class MessageController {
                 userId,
                 id
             ]
-            db(query, values, (err, result) => {
+            db(createMessageQuery, values, (err, result) => {
                 if(err)
                 return next(err)
                 if(result.rowCount == 1){
@@ -64,9 +64,9 @@ export default class MessageController {
 
     static received(req, res, next){
         const {userId} = req.userData
-        const query = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as from FROM Messages as m INNER JOIN Users as u ON m.userid = u.id WHERE receiverid = $1"
+        const selectReceivedEmails = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as from FROM Messages as m INNER JOIN Users as u ON m.userid = u.id WHERE receiverid = $1"
         const values = [userId]
-        db(query, values, (err, result) => {
+        db(selectReceivedEmails, values, (err, result) => {
             if (err)
             return next(err)
             if(result.rowCount > 0){
@@ -84,9 +84,9 @@ export default class MessageController {
 
     static unread(req, res, next){
         const {userId} = req.userData
-        const query = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as from FROM Messages as m INNER JOIN Users as u ON m.userid = u.id WHERE receiverid = $1 AND m.status = $2"
+        const selectUnreadEmails = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as from FROM Messages as m INNER JOIN Users as u ON m.userid = u.id WHERE receiverid = $1 AND m.status = $2"
         const values = [userId, 'unread']
-        db(query, values, (err, result) => {
+        db(selectUnreadEmails, values, (err, result) => {
             if (err)
             return next(err)
             if(result.rowCount > 0){
@@ -104,9 +104,9 @@ export default class MessageController {
 
     static sent(req, res, next){
         const {userId} = req.userData
-        const query = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as to FROM Messages as m INNER JOIN Users as u ON m.receiverid = u.id WHERE userid = $1"
+        const selectSentMessages = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as to FROM Messages as m INNER JOIN Users as u ON m.receiverid = u.id WHERE userid = $1"
         const values = [userId]
-        db(query, values, (err, result) => {
+        db(selectSentMessages, values, (err, result) => {
             if (err)
             return next(err)
             if(result.rowCount > 0){
@@ -136,9 +136,9 @@ export default class MessageController {
             })
         }
         const {userId} = req.userData
-        const query = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as to FROM Messages as m INNER JOIN Users as u ON m.receiverid = u.id WHERE userid = $1 AND m.id = $2"
+        const findSpecificMessage = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as to FROM Messages as m INNER JOIN Users as u ON m.receiverid = u.id WHERE userid = $1 AND m.id = $2"
         const values = [userId, req.params.id]
-        db(query, values, (err, result) => {
+        db(findSpecificMessage, values, (err, result) => {
             if (err)
             return next(err)
             if(result.rowCount == 1){
@@ -147,8 +147,8 @@ export default class MessageController {
                     data : result.rows[0]
                 })
             }else{
-                const query = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as from FROM Messages as m INNER JOIN Users as u ON m.userid = u.id WHERE receiverid = $1 AND m.id = $2"
-                db(query, values, (err, result) => {
+                const findSpecificMessage = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as from FROM Messages as m INNER JOIN Users as u ON m.userid = u.id WHERE receiverid = $1 AND m.id = $2"
+                db(findSpecificMessage, values, (err, result) => {
                     if (err)
                     return next(err)
                     if(result.rowCount == 1){
@@ -175,15 +175,15 @@ export default class MessageController {
             })
         }
         const {userId} = req.userData
-        const query = "SELECT * FROM Messages WHERE id = $1 AND userid = $2"
+        const fetchOneMessage = "SELECT * FROM Messages WHERE id = $1 AND userid = $2"
         const values = [req.params.id, userId]
-        db(query, values, (err, result) => {
+        db(fetchOneMessage, values, (err, result) => {
             if (err)
             return next(err)
             if(result.rowCount == 1){
-                const query = "DELETE FROM Messages WHERE id = $1" 
+                const deleteAMessage = "DELETE FROM Messages WHERE id = $1" 
                 const values = [req.params.id];
-                db(query, values, (err, result) => {
+                db(deleteAMessage, values, (err, result) => {
                     if(result.rowCount == 1){
                         res.status(200).json({
                             status : 200,
@@ -210,9 +210,9 @@ export default class MessageController {
 
     static getDrafts (req, res, next) {
         const {userId} = req.userData
-        const query = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as to FROM Messages as m INNER JOIN Users as u ON m.receiverid = u.id WHERE userid = $1 AND status = $2"
+        const findDraftedMessages = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as to FROM Messages as m INNER JOIN Users as u ON m.receiverid = u.id WHERE userid = $1 AND status = $2"
         const values = [userId, 'draft']
-        db(query, values, (err, result) => {
+        db(findDraftedMessages, values, (err, result) => {
             if (err)
             return next(err)
             if(result.rowCount > 0){
@@ -239,10 +239,10 @@ export default class MessageController {
         const {userId} = req.userData
         let {subject} = req.body
         const { to, message, parentMessageId} = req.body
-            //check if email exists
-        const query = "SELECT * FROM Users WHERE email = $1";
+        //check if email exists
+        const fetchTheUser = "SELECT * FROM Users WHERE email = $1";
         const values = [to]
-        db(query, values, (err, users) => {
+        db(fetchTheUser, values, (err, users) => {
             if(err)
                 return next(err)
             if(users.rowCount != 1)
@@ -251,7 +251,7 @@ export default class MessageController {
                     error : `${req.body.to} not found, make sure you typed a registered user`, 
                 })
             const {id, email} = users.rows[0] 
-            const query = "INSERT INTO Messages (subject, message, status, parentMessageId, userId, receiverId) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *";
+            const saveDraft = "INSERT INTO Messages (subject, message, status, parentMessageId, userId, receiverId) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *";
             if (!subject){
                 subject = 'no-subject'
             }
@@ -263,7 +263,7 @@ export default class MessageController {
                 userId,
                 id
             ]
-            db(query, values, (err, result) => {
+            db(saveDraft, values, (err, result) => {
                 if(err)
                 return next(err)
                 if(result.rowCount == 1){
@@ -293,15 +293,15 @@ export default class MessageController {
             })
         }
         const {userId} = req.userData
-        const query = "SELECT * FROM Messages WHERE id = $1 AND userid = $2"
+        const fetchOneDraftMessage = "SELECT * FROM Messages WHERE id = $1 AND userid = $2"
         const values = [req.params.id, userId]
-        db(query, values, (err, result) => {
+        db(fetchOneDraftMessage, values, (err, result) => {
             if (err)
                 return next(err)
             if(result.rowCount == 1){
-                const query = "DELETE FROM Messages WHERE id = $1" 
+                const delOneDraftMessage = "DELETE FROM Messages WHERE id = $1" 
                 const values = [req.params.id];
-                db(query, values, (err, result) => {
+                db(delOneDraftMessage, values, (err, result) => {
                     if(result.rowCount == 1){
                         res.status(200).json({
                             status : 200,
@@ -354,15 +354,15 @@ export default class MessageController {
             })
         }
         const {userId} = req.userData
-        const query = "SELECT * FROM Messages WHERE id = $1 AND userid = $2 AND status = $3"
+        const fetchOneDraftMessage = "SELECT * FROM Messages WHERE id = $1 AND userid = $2 AND status = $3"
         const values = [req.params.id, userId, 'draft']
-        db(query, values, (err, result) => {
+        db(fetchOneDraftMessage, values, (err, result) => {
             if (err)
                 return next(err)
             if(result.rowCount == 1){
-                const query = "UPDATE Messages SET status = $1 WHERE id = $2"; 
+                const setMessageAsSent = "UPDATE Messages SET status = $1 WHERE id = $2"; 
                 const values = ['unread', req.params.id];
-                db(query, values, (err, result) => {
+                db(setMessageAsSent, values, (err, result) => {
                     if(result.rowCount == 1){
                         // result.rows[0].status = "sent"
                         res.status(200).json({
@@ -378,14 +378,5 @@ export default class MessageController {
                 })
             }    
         })
-    }
-}
-
-export class SentMessage{
-    constructor(receiverId, messageId,status, createdOn) {
-        this.receiverId = receiverId,
-        this.messageId = messageId,
-        this.status = status,
-        this.createdOn = createdOn
     }
 }
