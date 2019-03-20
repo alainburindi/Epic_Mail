@@ -5,7 +5,7 @@ import MessageController from '../../controllers/v2/message'
 const messagesRoutes2 = express.Router()
 
 messagesRoutes2.get("/", MessageController.received)
-messagesRoutes2.get("/unread", (req, res) => res.send("not yet done"))
+messagesRoutes2.get("/unread", MessageController.unread)
 messagesRoutes2.get("/sent", (req, res) => res.send("not yet done"))
 messagesRoutes2.get("/:id", (req, res) => res.send("not yet done"))
 messagesRoutes2.post("/", MessageController.create)
