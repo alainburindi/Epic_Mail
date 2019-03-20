@@ -100,6 +100,30 @@ export default class MessageController {
         })
     }
 
+    static sent(req, res, next){
+        const {userId} = req.userData
+        const query = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as to FROM Messages as m INNER JOIN Users as u ON m.receiverid = u.id WHERE userid = $1"
+        const values = [userId]
+        db(query, values, (err, result) => {
+            if (err)
+            return next(err)
+            if(result.rowCount > 0){
+                let messages = []
+                for (const message of result.rows) {
+                    message.status = "sent"
+                    messages.push(message)
+                }
+                res.status(200).json({
+                    data : [messages]
+                })
+            }else{
+                res.status(200).json({
+                    data : "no message for you"
+                })
+            }
+        })
+    }
+
     validationError(res, error) {
         res.status(422).json({
            status : 422 ,
