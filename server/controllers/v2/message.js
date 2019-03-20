@@ -289,7 +289,30 @@ export default class MessageController {
     }
 
     static getSpecifcDraft(req, res, next) {
-        res.send("not yet done")
+        const validate = Validator.schemaParamsId(req.params )
+        if(validate.error){
+            res.status(422).json({
+                status : 422 ,
+                error : validate.error
+            })
+        }
+        const {userId} = req.userData
+        const specificEmailQuery = "SELECT m.id, m.subject, m.message, m.status, m.parentmessageid, m.created_at, u.email as to FROM Messages as m INNER JOIN Users as u ON m.userid = u.id WHERE userid = $1 AND m.id = $2 AND status = $3"
+        const values = [userId, req.params.id, 'draft']
+        db(specificEmailQuery, values, (err, result) => {
+            if (err)
+                return next(err)
+            if(result.rowCount == 1){
+                res.status(200).json({
+                    data : result.rows[0]
+                })
+            }else{
+                res.status(200).json({
+                    status : 200,
+                    data : "message not found or access is denied"
+                })
+            }
+        })
     }
     
     static sendSpecifcDraft(req, res, next) {
