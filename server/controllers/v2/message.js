@@ -166,6 +166,41 @@ export default class MessageController {
         })
     }
 
+    static delete(req, res, next){
+        const validate = Validator.schemaParamsId(req.params )
+        if(validate.error){
+            res.status(422).json({
+                status : 422 ,
+                error : validate.error
+            })
+        }
+        const {userId} = req.userData
+        const query = "SELECT * FROM Messages WHERE id = $1 AND userid = $2"
+        const values = [req.params.id, userId]
+        db(query, values, (err, result) => {
+            if (err)
+            return next(err)
+            if(result.rowCount == 1){
+                const query = "DELETE FROM Messages WHERE id = $1" 
+                const values = [req.params.id];
+                db(query, values, (err, result) => {
+                    if(result.rowCount == 1){
+                        res.status(200).json({
+                            status : 200,
+                            data :  [{ message : "successfuly deleted"}]
+                        })
+                    }
+                })
+                
+            }else{
+                res.status(200).json({
+                    status : 200,
+                    data : "message not found or access is denied"
+                })
+            }    
+        })
+    }
+
     validationError(res, error) {
         res.status(422).json({
            status : 422 ,
