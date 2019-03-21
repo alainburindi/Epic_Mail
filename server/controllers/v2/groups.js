@@ -104,7 +104,46 @@ export default class GroupController{
     }
 
     static delGroup(req, res, next){
-        res.send("not yet done")
+        const validateId = Validator.schemaParamsId(req.params);
+        if(validateId.error){
+            res.status(422).json({
+                status : 422 ,
+                error : validateId.error
+            })
+        }
+        const {userId} = req.userData
+        const getAGroup = "SELECT * FROM Groups as g INNER JOIN Users as u ON g.userid = u.id AND u.id = $1 AND g.id = $2";
+        const values = [userId, req.params.id];
+        db(getAGroup, values, (err, result) => {
+            if(err)
+                return next(err)
+            if (result.rowCount == 1){
+                const deleteGroup = "DELETE FROM Groups WHERE id = $1"; 
+                const values = [req.params.id];
+                db(deleteGroup, values, (err, result) => {
+                    if(err)
+                    return next(err)
+                    if(result.rowCount == 1){
+                        const deleteGroupMembers = "DELETE FROM Members WHERE groupid = $1"; 
+                        db(deleteGroupMembers, values, (err, result) => {
+                            if(err)
+                                return next(err)
+                            if(result.rowCount > 0){
+                                res.status(200).json({
+                                    status : 200,
+                                    message :   ["group and its members deleted correctly"]
+                                })
+                            }
+                        })
+                    }
+                })
+            }else{
+                res.status(403).json({
+                    status : 403,
+                    message : "access is denied"
+                })
+            }
+        })
     }
 
     static addUser(req, res, next){
