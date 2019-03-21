@@ -75,7 +75,7 @@ app.listen(port, () => {
 })
 function createTables() {
     const createTables = `
-    CREATE TABLE users IF NOT EXISTS
+    CREATE TABLE IF NOT EXISTS users
     (
         id serial,
         name character varying(255) NOT NULL,
@@ -83,9 +83,8 @@ function createTables() {
         password character varying(255) NOT NULL,
         created_at timestamp without time zone DEFAULT now(),
         CONSTRAINT users_pkey PRIMARY KEY (id)
-    )
-    CREATE TABLE messages IF NOT EXISTS
-
+    );
+    CREATE TABLE IF NOT EXISTS messages
     (
     id serial,
     subject character varying(255) NOT NULL,
@@ -108,10 +107,9 @@ function createTables() {
         REFERENCES public.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
-    )
+    );
 
-    CREATE TABLE groups IF NOT EXISTS
-(
+    CREATE TABLE IF NOT EXISTS groups    (
     id serial,
     name character varying(100),
     userid seiral,
@@ -120,9 +118,10 @@ function createTables() {
         REFERENCES public.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE CASCADE
-    )
-    CREATE TABLE members IF NOT EXISTS
-(
+    );
+
+    CREATE TABLE IF NOT EXISTS members
+    (
     id serial,
     groupid serial,
     userid serial,
@@ -136,9 +135,8 @@ function createTables() {
         REFERENCES public.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE CASCADE
-)
+    );
     `
-
     db(createTables, [], (err, result) => {
         if(err)
         console.log(err)
