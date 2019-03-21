@@ -3,27 +3,13 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 
 
-const server = require( '../../app');
+const server = require( '../app');
 
 chai.use(chaiHttp);
 
 let  token = ""
-let id = 6;
-
-describe('Get without authentification', () => {
-    it('should return a correct error', (done) => {
-        chai.request(server)
-        .get('/api/v2/messages')
-        .end((err, res) => {
-            res.body.should.have.status(401)
-            res.body.should.be.an('Object')
-            res.body.should.have.property('error').equal("Authentication failed, please check your credentials")
-            done()
-        })
-    })
-})
-
-describe('Post with authentification', () => {
+let id = 0;
+describe('Add a draft with authentification', () => {
     it('should login and give the token', (done) => {
         chai.request(server)
         .post('/api/v2/auth/login')
@@ -39,9 +25,9 @@ describe('Post with authentification', () => {
             done()
         })
     })
-    it('should return a created email', (done) => {
+    it('should return a drafted email', (done) => {
         chai.request(server)
-        .post('/api/v2/messages')
+        .post('/api/v2/messages/drafts/save')
         .set('Authorization', `Bearer ${token}`)
         .send({
             subject : "fisrt test",
@@ -57,9 +43,21 @@ describe('Post with authentification', () => {
         })
     })
 
+    it('should send a drafted email', (done) => {
+        chai.request(server)
+        .post(`/api/v2/messages/drafts/send/${id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .end((err, res) => {
+            res.body.should.have.status(200)
+            res.body.should.be.an('Object')
+            res.body.should.have.property('data')
+            id = res.body.data.id
+            done()
+        })
+    })
     it('should return an error if user is not found', (done) => {
         chai.request(server)
-        .post('/api/v2/messages')
+        .post('/api/v2/messages/drafts/save')
         .set('Authorization', `Bearer ${token}`)
         .send({
             subject : "fisrt test",
@@ -76,7 +74,7 @@ describe('Post with authentification', () => {
 
     it('should return an error if message field is missing', (done) => {
         chai.request(server)
-        .post('/api/v2/messages')
+        .post('/api/v2/messages/drafts/save')
         .set('Authorization', `Bearer ${token}`)
         .send({
             subject : "fisrt test",
@@ -91,10 +89,10 @@ describe('Post with authentification', () => {
 
 })
 
-describe('Get with authentification', () => {
-    it('should return received email data', (done) => {
+describe('Get drafted with authentification', () => {
+    it('should return drafted email data', (done) => {
         chai.request(server)
-        .get('/api/v2/messages')
+        .get('/api/v2/messages/drafts/all')
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
             res.body.should.have.status(200)
@@ -104,46 +102,9 @@ describe('Get with authentification', () => {
         })
     })
 
-
-    it('should return a unread message data', (done) => {
+    it('should return a specific drafted email data', (done) => {
         chai.request(server)
-        .get('/api/v2/messages/unread')
-        .set('Authorization', `Bearer ${token}`)
-        .end((err, res) => {
-            res.body.should.have.status(200)
-            res.body.should.be.an('Object')
-            res.body.should.have.property('data')
-            done()
-        })
-    })
-
-    it('should return sent email data', (done) => {
-        chai.request(server)
-        .get('/api/v2/messages/sent')
-        .set('Authorization', `Bearer ${token}`)
-        .end((err, res) => {
-            res.body.should.have.status(200)
-            res.body.should.be.an('Object')
-            res.body.should.have.property('data')
-            done()
-        })
-    })
-
-    it('should return a specific email data', (done) => {
-        chai.request(server)
-        .get(`/api/v2/messages/${id}`)
-        .set('Authorization', `Bearer ${token}`)
-        .end((err, res) => {
-            res.body.should.have.status(200)
-            res.body.should.be.an('Object')
-            res.body.should.have.property('data')
-            done()
-        })
-    })
-
-    it('should return an error if id doesn\'t exist', (done) => {
-        chai.request(server)
-        .get('/api/v2/messages/100')
+        .get(`/api/v2/messages/drafts/get/${id}`)
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
             res.body.should.have.status(200)
@@ -155,36 +116,10 @@ describe('Get with authentification', () => {
 
     it('should return an error if id is not a number', (done) => {
         chai.request(server)
-        .get('/api/v2/messages/r')
+        .get('/api/v2/messages/drafts/get/r')
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
             res.body.should.have.status(422)
-            res.body.should.be.an('Object')
-            res.body.should.have.property('error')
-            done()
-        })
-    })
-})
-
-describe('Post without authentification', () => {
-    it('should return a correct error', (done) => {
-        chai.request(server)
-        .post('/api/v2/messages')
-        .end((err, res) => {
-            res.body.should.have.status(401)
-            res.body.should.be.an('Object')
-            res.body.should.have.property('error')
-            done()
-        })
-    })
-})
-
-describe('DELETE without authentification', () => {
-    it("should send the correct error", (done) =>{
-        chai.request(server)
-        .delete(`/api/v2/messages/${id}`)
-        .end((err, res) => {
-            res.body.should.have.status(401)
             res.body.should.be.an('Object')
             res.body.should.have.property('error')
             done()
