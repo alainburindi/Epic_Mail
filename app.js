@@ -90,15 +90,11 @@ function createTables() {
     subject character varying(255) NOT NULL,
     message character varying(2000) NOT NULL,
     status character varying(10) NOT NULL,
-    parentmessageid serial NULL,
+    parentmessageid serial NULL REFERENCES messages(id),
     userid serial,
     receiverid serial,
     created_at timestamp without time zone DEFAULT now(),
     CONSTRAINT messages_pkey PRIMARY KEY (id),
-    CONSTRAINT messages_parentmessageid_fkey FOREIGN KEY (parentmessageid)
-        REFERENCES public.messages (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
     CONSTRAINT messages_receiverid_fkey FOREIGN KEY (receiverid)
         REFERENCES public.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
