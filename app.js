@@ -112,7 +112,7 @@ function createTables() {
     CREATE TABLE IF NOT EXISTS groups    (
     id serial,
     name character varying(100),
-    userid seiral,
+    userid serial,
     CONSTRAINT groups_pkey PRIMARY KEY (id),
     CONSTRAINT group_owner_fk FOREIGN KEY (userid)
         REFERENCES public.users (id) MATCH SIMPLE
