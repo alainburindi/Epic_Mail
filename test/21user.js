@@ -56,59 +56,59 @@ describe('Signup with db', () => {
     })
 });
 
-describe('Signin with', () => {
-    it('should login a user', (done) => {
-        chai.request(server)
-        .post('/api/v2/auth/login')
-        .send({
-            email : 'alain@gmail.com',
-            password : "password",
-        })
-        .end((err, res) => {
-            res.body.should.have.status(200)
-            res.body.should.be.an('Object')
-            res.body.should.have.property('data')
-            done()
-        })
-    })
+// describe('Signin with', () => {
+//     it('should login a user', (done) => {
+//         chai.request(server)
+//         .post('/api/v2/auth/login')
+//         .send({
+//             email : 'alain@gmail.com',
+//             password : "password",
+//         })
+//         .end((err, res) => {
+//             res.body.should.have.status(200)
+//             res.body.should.be.an('Object')
+//             res.body.should.have.property('data')
+//             done()
+//         })
+//     })
 
-    it('should not login if the password is incorect', (done) => {
-        chai.request(server)
-        .post('/api/v2/auth/login')
-        .send({
-            email : 'alain@gmail.com',
-            password : "passwor1",
-        })
-        .end((err, res) => {
-            res.body.should.have.status(401)
-            res.body.should.be.an('Object')
-            res.body.should.have.property('error')
-            done()
-        })
-    })
-    it('should not login a user if body is empty', (done) => {
-        chai.request(server)
-        .post('/api/v2/auth/login')
-        .end((err, res) => {
-            res.body.should.have.status(422)
-            res.body.should.be.an('Object')
-            res.body.should.have.property('error')
-            done()
-        })
-    })
+//     it('should not login if the password is incorect', (done) => {
+//         chai.request(server)
+//         .post('/api/v2/auth/login')
+//         .send({
+//             email : 'alain@gmail.com',
+//             password : "passwor1",
+//         })
+//         .end((err, res) => {
+//             res.body.should.have.status(401)
+//             res.body.should.be.an('Object')
+//             res.body.should.have.property('error')
+//             done()
+//         })
+//     })
+//     it('should not login a user if body is empty', (done) => {
+//         chai.request(server)
+//         .post('/api/v2/auth/login')
+//         .end((err, res) => {
+//             res.body.should.have.status(422)
+//             res.body.should.be.an('Object')
+//             res.body.should.have.property('error')
+//             done()
+//         })
+//     })
 
-    it('should not login an unregistered user', (done) => {
-        chai.request(server)
-        .post('/api/v2/auth/login')
-        .send({
-            email : 'unregistered@gmail.com',
-            password : "password",
-        })
-        .end((err, res) => {
-            res.body.should.have.status(401)
-            res.body.should.be.an('Object')
-            res.body.should.have.property('error')
-            done()
-        })
-    })
-});
+//     it('should not login an unregistered user', (done) => {
+//         chai.request(server)
+//         .post('/api/v2/auth/login')
+//         .send({
+//             email : 'unregistered@gmail.com',
+//             password : "password",
+//         })
+//         .end((err, res) => {
+//             res.body.should.have.status(401)
+//             res.body.should.be.an('Object')
+//             res.body.should.have.property('error')
+//             done()
+//         })
+//     })
+// });
