@@ -256,7 +256,7 @@ export default class MessageController {
                     error : `${req.body.to} not found, make sure you typed a registered user`, 
                 })
             const {id, email} = users.rows[0] 
-            const saveDraft = "INSERT INTO Messages (subject, message, status, userId, receiverId) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *";
+            const saveDraft = "INSERT INTO Messages (subject, message, status, userId, receiverId) VALUES ($1, $2, $3, $4, $5) RETURNING *";
             if (!subject){
                 subject = 'no-subject'
             }
