@@ -24,4 +24,12 @@ export default class Validator {
         }
         return Joi.validate(message, schema)
     }
+
+    static schemaGroupUser(user){
+        const schema = {
+            role : Joi.string().required(),
+            email : Joi.string().email().required(),
+        }
+        return Joi.validate(user, schema)
+    }
 }
