@@ -90,7 +90,7 @@ function createTables() {
     subject character varying(255) NOT NULL,
     message character varying(2000) NOT NULL,
     status character varying(10) NOT NULL,
-    parentmessageid serial,
+    parentmessageid serial NULL,
     userid serial,
     receiverid serial,
     created_at timestamp without time zone DEFAULT now(),
