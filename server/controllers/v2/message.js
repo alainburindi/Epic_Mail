@@ -374,7 +374,7 @@ export default class MessageController {
                         // result.rows[0].status = "sent"
                         res.status(200).json({
                             status : 200,
-                            message :   ["message sent corrctly"]
+                            data :   ["message sent corrctly"]
                         })
                     }
                 })
