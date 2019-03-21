@@ -9,22 +9,22 @@ const should = chai.should();
 chai.use(chaiHttp);
 
 describe('Signup with db', () => {
-    it('should register and give the token', (done) => {
-        chai.request(server)
-        .post('/api/v2/auth/signup')
-        .send({
-            name : 'Burindi Alain',
-            email : 'alain@gmail.com',
-            password : "password",
-            confirmPassword : "password"
-        })
-        .end((err, res) => {
-            res.body.should.have.status(201)
-            res.body.should.be.an('Object')
-            res.body.should.have.property('data')
-            done()
-        })
-    })
+    // it('should register and give the token', (done) => {
+    //     chai.request(server)
+    //     .post('/api/v2/auth/signup')
+    //     .send({
+    //         name : 'Burindi Alain',
+    //         email : 'alain@gmail.com',
+    //         password : "password",
+    //         confirmPassword : "password"
+    //     })
+    //     .end((err, res) => {
+    //         res.body.should.have.status(201)
+    //         res.body.should.be.an('Object')
+    //         res.body.should.have.property('data')
+    //         done()
+    //     })
+    // })
 
     it('should not register an existing user', (done) => {
         chai.request(server)
