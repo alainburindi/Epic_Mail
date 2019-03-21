@@ -9,5 +9,3 @@ env:
   - DATABASE_URL=postgres://lbtjbjdu:e36mF2TRUmgRDKrO28PGct8zo_rkmXNz@isilo.db.elephantsql.com:5432/lbtjbjdu
 services:
   - postgresql
-before_script:
-  - psql -c 'create database testepic;' -U postgres
