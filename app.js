@@ -83,6 +83,16 @@ function createTables() {
         password character varying(255) NOT NULL,
         created_at timestamp without time zone DEFAULT now() 
     );
+    CREATE TABLE IF NOT EXISTS messages
+    (
+    id serial PRIMARY KEY,
+    subject character varying(255) NOT NULL,
+    message character varying(2000) NOT NULL,
+    status character varying(10) NOT NULL,
+    userid serial REFERENCES users(id),
+    receiverid serial REFERENCES public.users (id),
+    created_at timestamp without time zone DEFAULT now()
+    );
     `
     db(createTables, [], (err, result) => {
         if(err)
