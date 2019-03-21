@@ -6,7 +6,7 @@ env:
   global:
   - NODE_ENV="development"
   - TOKEN_KEY="alainsecretkey"
-  - DATABASE_URL=postgres://postgres@127.0.0.1:5432/epic_mail
+  - DATABASE_URL=postgres://lbtjbjdu:e36mF2TRUmgRDKrO28PGct8zo_rkmXNz@isilo.db.elephantsql.com:5432/lbtjbjdu
 services:
   - postgresql
 before_script:
