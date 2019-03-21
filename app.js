@@ -1,5 +1,6 @@
 import express from 'express'
 import bodyParser from 'body-parser';
+import db from './server/db/db'
 
 const app = express()
 
@@ -69,6 +70,79 @@ app.use((error, req, res, next) => {
 })
 
 
-app.listen(port)
+app.listen(port, () => {
+    createTables();
+})
+function createTables() {
+    const createTables = `
+    CREATE TABLE users IF NOT EXISTS
+    (
+        id serial,
+        name character varying(255) NOT NULL,
+        email character varying(255) NOT NULL,
+        password character varying(255) NOT NULL,
+        created_at timestamp without time zone DEFAULT now(),
+        CONSTRAINT users_pkey PRIMARY KEY (id)
+    )
+    CREATE TABLE messages IF NOT EXISTS
+
+    (
+    id serial,
+    subject character varying(255) NOT NULL,
+    message character varying(2000) NOT NULL,
+    status character varying(10) NOT NULL,
+    parentmessageid serial,
+    userid serial,
+    receiverid serial,
+    created_at timestamp without time zone DEFAULT now(),
+    CONSTRAINT messages_pkey PRIMARY KEY (id),
+    CONSTRAINT messages_parentmessageid_fkey FOREIGN KEY (parentmessageid)
+        REFERENCES public.messages (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT messages_receiverid_fkey FOREIGN KEY (receiverid)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT messages_userid_fkey FOREIGN KEY (userid)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+    )
+
+    CREATE TABLE groups IF NOT EXISTS
+(
+    id serial,
+    name character varying(100),
+    userid seiral,
+    CONSTRAINT groups_pkey PRIMARY KEY (id),
+    CONSTRAINT group_owner_fk FOREIGN KEY (userid)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+    )
+    CREATE TABLE members IF NOT EXISTS
+(
+    id serial,
+    groupid serial,
+    userid serial,
+    role character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT members_pkey PRIMARY KEY (id),
+    CONSTRAINT members_groupid_fkey FOREIGN KEY (groupid)
+        REFERENCES public.groups (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT members_userid_fkey FOREIGN KEY (userid)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+    `
+
+    db(createTables, [], (err, result) => {
+        if(err)
+        console.log(err)
+    })
+}
 
 module.exports = app;
