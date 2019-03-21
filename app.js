@@ -77,59 +77,11 @@ function createTables() {
     const createTables = `
     CREATE TABLE IF NOT EXISTS users
     (
-        id serial,
+        id serial PRIMARY KEY,
         name character varying(255) NOT NULL,
         email character varying(255) NOT NULL,
         password character varying(255) NOT NULL,
-        created_at timestamp without time zone DEFAULT now(),
-        CONSTRAINT users_pkey PRIMARY KEY (id)
-    );
-    CREATE TABLE IF NOT EXISTS messages
-    (
-    id serial,
-    subject character varying(255) NOT NULL,
-    message character varying(2000) NOT NULL,
-    status character varying(10) NOT NULL,
-    userid serial,
-    receiverid serial,
-    created_at timestamp without time zone DEFAULT now(),
-    CONSTRAINT messages_pkey PRIMARY KEY (id),
-    CONSTRAINT messages_receiverid_fkey FOREIGN KEY (receiverid)
-        REFERENCES public.users (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT messages_userid_fkey FOREIGN KEY (userid)
-        REFERENCES public.users (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-    );
-
-    CREATE TABLE IF NOT EXISTS groups    (
-    id serial,
-    name character varying(100),
-    userid serial,
-    CONSTRAINT groups_pkey PRIMARY KEY (id),
-    CONSTRAINT group_owner_fk FOREIGN KEY (userid)
-        REFERENCES public.users (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE CASCADE
-    );
-
-    CREATE TABLE IF NOT EXISTS members
-    (
-    id serial,
-    groupid serial,
-    userid serial,
-    role character varying COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT members_pkey PRIMARY KEY (id),
-    CONSTRAINT members_groupid_fkey FOREIGN KEY (groupid)
-        REFERENCES public.groups (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE CASCADE,
-    CONSTRAINT members_userid_fkey FOREIGN KEY (userid)
-        REFERENCES public.users (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE CASCADE
+        created_at timestamp without time zone DEFAULT now() 
     );
     `
     db(createTables, [], (err, result) => {
