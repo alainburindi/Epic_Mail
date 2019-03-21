@@ -60,7 +60,47 @@ export default class GroupController{
     }
 
     static editName(req, res, next){
-        res.send("not yet done")
+        const validate = Validator.schemaCreateGroup(req.body)
+        if(validate.error){
+            res.status(422).json({
+                status : 422 ,
+                error : validate.error
+            })
+        }
+        const validateId = Validator.schemaParamsId(req.params);
+        if(validateId.error){
+            res.status(422).json({
+                status : 422 ,
+                error : validateId.error
+            })
+        }
+        const {userId} = req.userData
+        const getAGroup = "SELECT * FROM Groups as g INNER JOIN Users as u ON g.userid = u.id AND u.id = $1 AND g.id = $2";
+        const values = [userId, req.params.id];
+        db(getAGroup, values, (err, result) => {
+            if(err)
+                return next(err)
+            if (result.rowCount == 1){
+                const editGroupName = "UPDATE Groups SET name = $1 WHERE id = $2"; 
+                const values = [req.body.name, req.params.id];
+                db(editGroupName, values, (err, result) => {
+                    if(err)
+                    return next(err)
+                    if(result.rowCount == 1){
+                        // result.rows[0].status = "sent"
+                        res.status(200).json({
+                            status : 200,
+                            message :   ["group name changed correctly"]
+                        })
+                    }
+                })
+            }else{
+                res.status(403).json({
+                    status : 403,
+                    message : "access is denied"
+                })
+            }
+        })
     }
 
     static delGroup(req, res, next){
