@@ -7,3 +7,7 @@ env:
   - NODE_ENV="development"
   - TOKEN_KEY="alainsecretkey"
   - DATABASE_URL=postgres://postgres@127.0.0.1:5432/epic_mail
+services:
+  - postgresql
+before_script:
+  - psql -c 'create database testepic;' -U postgres
