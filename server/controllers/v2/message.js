@@ -8,9 +8,9 @@ export default class MessageController {
     static create(req, res, next){
         const validate = Validator.schemaMessage(req.body )
         if(validate.error){
-            res.status(422).json({
+            return res.status(422).json({
                 status : 422 ,
-                error : error
+                error : validate.error
             })
         }
         const {userId} = req.userData
@@ -71,7 +71,8 @@ export default class MessageController {
             return next(err)
             if(result.rowCount > 0){
                 res.status(200).json({
-                    data : [result.rows]
+                    status : 200,
+                    data : result.rows
                 })
             }else{
                 res.status(200).json({
@@ -91,7 +92,8 @@ export default class MessageController {
             return next(err)
             if(result.rowCount > 0){
                 res.status(200).json({
-                    data : [result.rows]
+                    status : 200,
+                    data : result.rows
                 })
             }else{
                 res.status(200).json({
@@ -116,7 +118,8 @@ export default class MessageController {
                     messages.push(message)
                 }
                 res.status(200).json({
-                    data : [messages]
+                    status : 200,
+                    data : messages
                 })
             }else{
                 res.status(200).json({
@@ -144,6 +147,7 @@ export default class MessageController {
             if(result.rowCount == 1){
                 result.rows[0].status = "sent";
                 res.status(200).json({
+                    status : 200,
                     data : result.rows[0]
                 })
             }else{
@@ -153,6 +157,7 @@ export default class MessageController {
                     return next(err)
                     if(result.rowCount == 1){
                         res.status(200).json({
+                            status : 200,
                             data : result.rows[0]
                         })
                     }else{
@@ -187,7 +192,7 @@ export default class MessageController {
                     if(result.rowCount == 1){
                         res.status(200).json({
                             status : 200,
-                            data :  [{ message : "successfuly deleted"}]
+                            data :  { message : "successfuly deleted"}
                         })
                     }
                 })
@@ -217,7 +222,8 @@ export default class MessageController {
             return next(err)
             if(result.rowCount > 0){
                 res.status(200).json({
-                    data : [result.rows]
+                    status : 200,
+                    data : result.rows
                 })
             }else{
                 res.status(200).json({
@@ -334,6 +340,7 @@ export default class MessageController {
                 return next(err)
             if(result.rowCount == 1){
                 res.status(200).json({
+                    status : 200,
                     data : result.rows[0]
                 })
             }else{
