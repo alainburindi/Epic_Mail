@@ -90,8 +90,19 @@ function createTables() {
     message character varying(2000) NOT NULL,
     status character varying(10) NOT NULL,
     userid serial REFERENCES users(id),
-    receiverid serial REFERENCES public.users (id),
+    receiverid serial REFERENCES users (id),
     created_at timestamp without time zone DEFAULT now()
+    );
+    CREATE TABLE IF NOT EXISTS groups (
+        id serial PRIMARY KEY,
+        name character varying(100),
+        userid serial REFERENCES users (id)
+    );
+    CREATE TABLE IF NOT EXISTS members (
+        id serial PRIMARY KEY,
+        groupid serial REFERENCES groups (id),
+        userid serial REFERENCES users (id),
+        role character varying NOT NULL
     );
     `
     db(createTables, [], (err, result) => {

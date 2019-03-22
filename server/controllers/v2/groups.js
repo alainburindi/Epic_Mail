@@ -43,15 +43,16 @@ export default class GroupController{
         const getCreatedGroups = "SELECT g.id, g.name, m.role FROM Groups as g INNER JOIN Members as m ON g.userid = m.userid WHERE g.userid = $1";
         const values = [userId];
         db(getCreatedGroups, values, (err, result) => {
-            if(err)
+            if(err){
                 return next(err)
+            }
             if(result.rowCount > 0){
-                res.status(200).json({
+                return res.status(200).json({
                     status : 200,
                     data : result.rows
                 })
             }else{
-                res.status(200).json({
+                return res.status(200).json({
                     status : 200,
                     data : "there is no group for you"
                 })
@@ -69,7 +70,7 @@ export default class GroupController{
         }
         const validateId = Validator.schemaParamsId(req.params);
         if(validateId.error){
-            res.status(422).json({
+            return res.status(422).json({
                 status : 422 ,
                 error : validateId.error
             })
