@@ -47,7 +47,7 @@ app.use(`${v2}/groups`, checkAuth, groupsRoutes)
 
 
 app.get('/',(req, res, next) => {
-    res.status(200).json({
+    return res.status(200).json({
         status : 200,
         message : "welcome to the EpicMail Api, below is how to use it",
         todo
@@ -60,8 +60,7 @@ app.use((req, res, next) => {
 })
 
 app.use((error, req, res, next) => {
-    res.status(error.status || 500)
-    res.json({
+    return res.status(error.status || 500).json({
         error : {
             status : error.status,
             message : error.message
@@ -90,8 +89,19 @@ function createTables() {
     message character varying(2000) NOT NULL,
     status character varying(10) NOT NULL,
     userid serial REFERENCES users(id),
-    receiverid serial REFERENCES public.users (id),
+    receiverid serial REFERENCES users (id),
     created_at timestamp without time zone DEFAULT now()
+    );
+    CREATE TABLE IF NOT EXISTS groups (
+        id serial PRIMARY KEY,
+        name character varying(100),
+        userid serial REFERENCES users (id)
+    );
+    CREATE TABLE IF NOT EXISTS members (
+        id serial PRIMARY KEY,
+        groupid serial REFERENCES groups (id),
+        userid serial REFERENCES users (id),
+        role character varying NOT NULL
     );
     `
     db(createTables, [], (err, result) => {

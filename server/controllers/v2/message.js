@@ -47,12 +47,12 @@ export default class MessageController {
                     delete result.rows[0].receiverid
                     result.rows[0].to = email
                     result.rows[0].status = "sent"
-                    res.status(201).json({
+                    return res.status(201).json({
                         status : 201,
                         data : result.rows[0]
                     })
                 }else{
-                    res.status(500).json({
+                    return res.status(500).json({
                         status : 500,
                         error : "error while saving"
                     })
@@ -69,12 +69,12 @@ export default class MessageController {
             if (err)
             return next(err)
             if(result.rowCount > 0){
-                res.status(200).json({
+                return res.status(200).json({
                     status : 200,
                     data : result.rows
                 })
             }else{
-                res.status(200).json({
+                return res.status(200).json({
                     status : 200,
                     data : "no message for you"
                 })
@@ -90,12 +90,12 @@ export default class MessageController {
             if (err)
             return next(err)
             if(result.rowCount > 0){
-                res.status(200).json({
+                return res.status(200).json({
                     status : 200,
                     data : result.rows
                 })
             }else{
-                res.status(200).json({
+                return res.status(200).json({
                     status : 200,
                     data : "no message for you"
                 })
@@ -116,12 +116,12 @@ export default class MessageController {
                     message.status = "sent"
                     messages.push(message)
                 }
-                res.status(200).json({
+                return res.status(200).json({
                     status : 200,
                     data : messages
                 })
             }else{
-                res.status(200).json({
+                return res.status(200).json({
                     status : 200,
                     data : "no message for you"
                 })
@@ -132,7 +132,7 @@ export default class MessageController {
     static find(req, res, next){
         const validate = Validator.schemaParamsId(req.params )
         if(validate.error){
-            res.status(422).json({
+            return res.status(422).json({
                 status : 422 ,
                 error : validate.error
             })
@@ -145,7 +145,7 @@ export default class MessageController {
             return next(err)
             if(result.rowCount == 1){
                 result.rows[0].status = "sent";
-                res.status(200).json({
+                return res.status(200).json({
                     status : 200,
                     data : result.rows[0]
                 })
@@ -155,12 +155,12 @@ export default class MessageController {
                     if (err)
                     return next(err)
                     if(result.rowCount == 1){
-                        res.status(200).json({
+                        return res.status(200).json({
                             status : 200,
                             data : result.rows[0]
                         })
                     }else{
-                        res.status(200).json({
+                        return res.status(200).json({
                             status : 200,
                             data : "message not found or access is denied"
                         })
@@ -173,7 +173,7 @@ export default class MessageController {
     static delete(req, res, next){
         const validate = Validator.schemaParamsId(req.params )
         if(validate.error){
-            res.status(422).json({
+            return res.status(422).json({
                 status : 422 ,
                 error : validate.error
             })
@@ -189,7 +189,7 @@ export default class MessageController {
                 const values = [req.params.id];
                 db(deleteAMessage, values, (err, result) => {
                     if(result.rowCount == 1){
-                        res.status(200).json({
+                        return res.status(200).json({
                             status : 200,
                             data :  { message : "successfuly deleted"}
                         })
@@ -197,19 +197,12 @@ export default class MessageController {
                 })
                 
             }else{
-                res.status(200).json({
+                return res.status(200).json({
                     status : 200,
                     data : "message not found or access is denied"
                 })
             }    
         })
-    }
-
-    validationError(res, error) {
-        res.status(422).json({
-           status : 422 ,
-           error : error
-       })
     }
 
     static getDrafts (req, res, next) {
@@ -220,12 +213,12 @@ export default class MessageController {
             if (err)
             return next(err)
             if(result.rowCount > 0){
-                res.status(200).json({
+                return res.status(200).json({
                     status : 200,
                     data : result.rows
                 })
             }else{
-                res.status(200).json({
+                return res.status(200).json({
                     status : 200,
                     data : "no message for you"
                 })
@@ -236,7 +229,7 @@ export default class MessageController {
     static saveDraft(req, res, next) {
         const validate = Validator.schemaMessage(req.body )
         if(validate.error){
-            res.status(422).json({
+            return res.status(422).json({
                 status : 422 ,
                 error : validate.error
             })
@@ -274,12 +267,12 @@ export default class MessageController {
                     delete result.rows[0].userid
                     delete result.rows[0].receiverid
                     result.rows[0].to = email
-                    res.status(201).json({
+                    return res.status(201).json({
                         status : 201,
                         data : result.rows[0]
                     })
                 }else{
-                    res.status(500).json({
+                    return res.status(500).json({
                         status : 500,
                         error : "error while saving"
                     })
@@ -291,7 +284,7 @@ export default class MessageController {
     static delSpecifcDraft(req, res, next) {
         const validate = Validator.schemaParamsId(req.params )
         if(validate.error){
-            res.status(422).json({
+            return res.status(422).json({
                 status : 422 ,
                 error : validate.error
             })
@@ -307,14 +300,14 @@ export default class MessageController {
                 const values = [req.params.id];
                 db(delOneDraftMessage, values, (err, result) => {
                     if(result.rowCount == 1){
-                        res.status(200).json({
+                        return res.status(200).json({
                             status : 200,
                             data :  { message : "successfuly deleted"}
                         })
                     }
                 })
             }else{
-                res.status(200).json({
+                return res.status(200).json({
                     status : 200,
                     data : "message not found or access is denied"
                 })
@@ -325,7 +318,7 @@ export default class MessageController {
     static getSpecifcDraft(req, res, next) {
         const validate = Validator.schemaParamsId(req.params )
         if(validate.error){
-            res.status(422).json({
+            return res.status(422).json({
                 status : 422 ,
                 error : validate.error
             })
@@ -337,12 +330,12 @@ export default class MessageController {
             if (err)
                 return next(err)
             if(result.rowCount == 1){
-                res.status(200).json({
+                return res.status(200).json({
                     status : 200,
                     data : result.rows[0]
                 })
             }else{
-                res.status(200).json({
+                return res.status(200).json({
                     status : 200,
                     data : "message not found or access is denied"
                 })
@@ -353,7 +346,7 @@ export default class MessageController {
     static sendSpecifcDraft(req, res, next) {
         const validate = Validator.schemaParamsId(req.params )
         if(validate.error){
-            res.status(422).json({
+            return res.status(422).json({
                 status : 422 ,
                 error : validate.error
             })
@@ -370,14 +363,14 @@ export default class MessageController {
                 db(setMessageAsSent, values, (err, result) => {
                     if(result.rowCount == 1){
                         // result.rows[0].status = "sent"
-                        res.status(200).json({
+                        return res.status(200).json({
                             status : 200,
                             data :   ["message sent corrctly"]
                         })
                     }
                 })
             }else{
-                res.status(200).json({
+                return res.status(200).json({
                     status : 200,
                     data : "message not found or access is denied"
                 })
