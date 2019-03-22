@@ -47,7 +47,7 @@ app.use(`${v2}/groups`, checkAuth, groupsRoutes)
 
 
 app.get('/',(req, res, next) => {
-    res.status(200).json({
+    return res.status(200).json({
         status : 200,
         message : "welcome to the EpicMail Api, below is how to use it",
         todo
@@ -60,8 +60,7 @@ app.use((req, res, next) => {
 })
 
 app.use((error, req, res, next) => {
-    res.status(error.status || 500)
-    res.json({
+    return res.status(error.status || 500).json({
         error : {
             status : error.status,
             message : error.message

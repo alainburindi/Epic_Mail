@@ -5,7 +5,7 @@ export default class GroupController{
     static create (req, res, next){
         const validate = Validator.schemaCreateGroup(req.body)
         if(validate.error){
-            res.status(422).json({
+            return res.status(422).json({
                 status : 422 ,
                 error : validate.error
             })
@@ -24,13 +24,13 @@ export default class GroupController{
                     if(err) 
                         return next(err)
                         let {role} = addUserResult.rows[0]
-                    res.status(201).json({
+                    return res.status(201).json({
                         status : 201 ,
                         data : {id, name, role}
                     })
                 })
             }else{
-                res.status(500).json({
+                return res.status(500).json({
                     status : 500,
                     error : "error while saving"
                 })
@@ -63,7 +63,7 @@ export default class GroupController{
     static editName(req, res, next){
         const validate = Validator.schemaCreateGroup(req.body)
         if(validate.error){
-            res.status(422).json({
+            return res.status(422).json({
                 status : 422 ,
                 error : validate.error
             })
@@ -89,16 +89,16 @@ export default class GroupController{
                     return next(err)
                     if(result.rowCount == 1){
                         // result.rows[0].status = "sent"
-                        res.status(200).json({
+                        return res.status(200).json({
                             status : 200,
                             message :   ["group name changed correctly"]
                         })
                     }
                 })
             }else{
-                res.status(403).json({
+                return res.status(403).json({
                     status : 403,
-                    message : "access is denied"
+                    error : "access is denied"
                 })
             }
         })
@@ -107,7 +107,7 @@ export default class GroupController{
     static delGroup(req, res, next){
         const validateId = Validator.schemaParamsId(req.params);
         if(validateId.error){
-            res.status(422).json({
+            return res.status(422).json({
                 status : 422 ,
                 error : validateId.error
             })
@@ -119,30 +119,32 @@ export default class GroupController{
             if(err)
                 return next(err)
             if (result.rowCount == 1){
-                const deleteGroup = "DELETE FROM Groups WHERE id = $1"; 
+                const deleteGroupMembers = "DELETE FROM Members WHERE groupid = $1"; 
                 const values = [req.params.id];
-                db(deleteGroup, values, (err, result) => {
+                db(deleteGroupMembers, values, (err, result) => {
                     if(err)
                     return next(err)
-                    if(result.rowCount == 1){
-                        const deleteGroupMembers = "DELETE FROM Members WHERE groupid = $1"; 
-                        db(deleteGroupMembers, values, (err, result) => {
+                    if(result.rowCount){
+                        const deleteGroup = "DELETE FROM Groups WHERE id = $1";
+                        db(deleteGroup, values, (err, result) => {
                             if(err)
                                 return next(err)
                             if(result.rowCount > 0){
-                                res.status(200).json({
+                                return res.status(200).json({
                                     status : 200,
                                     message :   ["group and its members deleted correctly"]
                                 })
                             }
                         })
+                    }else{
+                        return res.send(result);
                     }
                 })
             }else{
-                res.status(403).json({
+                return res.status(403).json({
                     status : 403,
-                    message : "access is denied"
-                })
+                    error : "access is denied"
+                }) 
             }
         })
     }
@@ -150,14 +152,14 @@ export default class GroupController{
     static addUser(req, res, next){
         const validateId = Validator.schemaParamsId(req.params);
         if(validateId.error){
-            res.status(422).json({
+            return res.status(422).json({
                 status : 422 ,
                 error : validateId.error
             })
         }
         const validate = Validator.schemaGroupUser(req.body);
         if(validate.error){
-            res.status(422).json({
+            return res.status(422).json({
                 status : 422 ,
                 error : validate.error
             })
@@ -181,38 +183,44 @@ export default class GroupController{
                             if(err)
                                 return next(err)
                             if(result.rowCount > 0){
-                                res.status(201).json({
+                                return res.status(201).json({
                                     status : 201,
                                     message : "user added corectly"
                                 })
                             }else{
-                                res.status(500).json({
+                                return res.status(500).json({
                                     status : 500,
                                     message : "error while saving"
                                 })
                             }
                         })
                     }else{
-                        res.status(404).json({
+                        return res.status(404).json({
                             status : 404,
                             error : `${req.body.email} not found, make sure you put a registered user`
                         })
                     }
                 })
             }else{
-                res.status(403).json({
+                return res.status(403).json({
                     status : 403,
-                    message : "access is denied"
+                    error : "access is denied"
                 })
             }
         })
     }
 
     static delUser(req, res, next){
-        res.send("not yet done")
+        return res.status(404).json({
+            status : 404,
+            error : "not yet done"
+        })
     }
 
     static sendMessage(req, res, next){
-        res.send("not yet done")
+        return res.status(404).json({
+            status : 404,
+            error : "not yet done"
+        })
     }
 }
