@@ -5,7 +5,7 @@ dotenv.config()
 
 const pool = new Pool({
     connectionString : process.env.DATABASE_URL,
-    ssl: true
+    // ssl: true
 })
 
 const query = (text, params, callback) => pool.query(text, params, callback)

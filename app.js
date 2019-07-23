@@ -1,6 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser';
 import db from './server/db/db'
+import cors from 'cors';
 
 const app = express()
 
@@ -39,6 +40,16 @@ app.use(bodyParser.json())
 const v1 = "/api/v1";
 const v2 = "/api/v2";
 
+// app.use(function(req, res, next) {
+//     console.log(req.headers);
+    
+//     res.header("Access-Control-Allow-Origin", "*");
+//     // res.header("Access-Control-Allow-Methods", "DELETE, POST, GET, OPTIONS");
+//     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+//     next();
+//   });
+
+app.use(cors());
 app.use(`${v1}/auth`, userRoutes)
 app.use(`${v1}/messages`, messageRoutes)
 app.use(`${v2}/auth`, userRoutes2)
